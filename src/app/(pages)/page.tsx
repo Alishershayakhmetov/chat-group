@@ -1,4 +1,4 @@
-import styles from "./page.module.css";
+import styles from "../styles/page.module.css";
 import Button from "@mui/material/Button";
 
 export default function Home() {
@@ -8,9 +8,11 @@ export default function Home() {
       <p className={styles.p}>
         Connect instantly with friends, family, and colleagues. Start
         conversations, share moments, and stay in touch effortlessly.
-        <h4>Join the conversation now!</h4>
       </p>
-      <Button variant="contained">Register</Button>
+      <h4 className={styles.p}>Join the conversation now!</h4>
+      <a href="/sign-up">
+        <Button variant="contained">Register</Button>
+      </a>
       <p className={styles.smallInfo}>
         By registering, you agree to our terms and conditions.
       </p>

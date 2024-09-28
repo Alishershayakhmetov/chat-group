@@ -35,6 +35,10 @@ a {
   text-decoration: none;
 }
 
+p {
+  font-family: Roboto;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;

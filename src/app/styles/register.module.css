@@ -1,0 +1,26 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    padding: 20px;
+    text-align: center;
+    background-color: #f9f9f9;
+}
+.form {
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+}
+.signUpText {
+    margin: 15px 0;
+}
+.selfContailed {
+    width: auto;
+    display: inline-block; /* Keeps the width as wide as the content */
+}
+.leftAlign {
+    display: block;
+    text-align: left;
+}
