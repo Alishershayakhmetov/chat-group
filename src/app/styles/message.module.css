@@ -1,0 +1,35 @@
+.messageBox {
+    display: flex;
+    width: fit-content;
+    flex-direction: row;
+}
+.profileImageBox {
+    display: flex;
+    margin-right: 4px;
+}
+.contentBox {
+    display: flex;
+    flex-direction: column;
+}
+.rightBox {
+    display: flex;
+    flex-direction: row;
+
+    
+    background-color: white;
+    margin: 2px 0;
+    padding: 8px 12px;
+    border-radius: 10px;
+}
+.relative {
+    position: relative;
+}
+.time {
+    color: #969696;
+    font-size: 12px;
+    /*
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    */
+}

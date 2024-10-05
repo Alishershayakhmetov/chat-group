@@ -1,7 +1,9 @@
+import { App } from "../components/app";
 import styles from "../styles/page.module.css";
 import Button from "@mui/material/Button";
 
 export default function Home() {
+  /*
   return (
     <div className={styles.container}>
       <img src="/favicon.png" alt="Logo" className={styles.image} />
@@ -18,4 +20,6 @@ export default function Home() {
       </p>
     </div>
   );
+  */
+  return <App />;
 }

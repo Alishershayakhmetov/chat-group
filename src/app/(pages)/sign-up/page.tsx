@@ -1,5 +1,6 @@
 import styles from "../../styles/register.module.css";
 import SignUpForm from "@/app/components/signUpForm";
+import { App } from "../../components/app";
 
 export default function SignUp() {
   return (
@@ -11,7 +12,3 @@ export default function SignUp() {
     </div>
   );
 }
-
-const App = () => {
-  return <div></div>;
-};

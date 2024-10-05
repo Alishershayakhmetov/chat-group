@@ -1,0 +1,63 @@
+.slide {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+}
+.slide:hover {
+    background-color: #2b5278;
+}
+.image {
+    width: 50px;
+    height: 50px;
+    border-radius: 20px;
+    margin-right: 10px;
+}
+.infoBox {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 100%;
+}
+.info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+.info p:first-child {
+    width: 100%; /* This will push the first child to the left */
+
+    /* Ensure the message area doesn't take more than one line */
+    overflow: hidden;            /* Hides overflow text */
+    white-space: nowrap;        /* Prevents wrapping */
+    text-overflow: ellipsis;    /* Shows ellipsis for overflow text */
+}
+.info p:nth-child(2) {
+    margin-right: 5px;
+}
+.chatHeaderBox {
+    background-color: #FFF;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    
+    padding: 4px 24px;
+}
+.chatNameBox {
+    display: flex;
+    flex-direction: row;
+}
+.chatNameInfoBox {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+.resetDefaultButton {
+    all: unset;
+}
+.searchIcon {
+    margin: auto 0;
+    border-radius: 100%;
+}
