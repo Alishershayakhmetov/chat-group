@@ -27,13 +27,10 @@
     transition: transform 0.3s ease; /* Smooth transition for slide effect */
     transform: translateX(-100%); /* Initially hidden offscreen */
     z-index: 1000; /* Ensure it is above other content */
-
-    
-    transform: translateX(0); 
   }
   
   /* doesn't work */
-  .leftSlideBox.visible {
+  .visible {
     transform: translateX(0); /* Show when the class is added */
   }
   

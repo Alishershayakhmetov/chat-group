@@ -45,7 +45,7 @@ const LeftSlideBox: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   };
 
   return (
-    <div className={`${styles.leftSlideBox} visible`}>
+    <div className={`${styles.leftSlideBox} ${styles.visible}`}>
       <header className={styles.slideHeader}>
         <CloseIcon sx={{ fontSize: 34, color: "black" }} onClick={onClose} />
         <Image

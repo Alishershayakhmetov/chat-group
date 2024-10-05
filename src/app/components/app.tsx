@@ -5,6 +5,7 @@ import { ChatSlide } from "./chatSlide";
 import { ChatHeader } from "./chatHeader";
 import { Message } from "./message";
 import { LeftSlide } from "./leftSlide";
+import { MessageInput } from "./messageInput";
 
 export const App = () => {
   return (
@@ -41,7 +42,7 @@ export const App = () => {
         </div>
       </section>
       <article className={styles.rightSlide}>
-        <div className={styles.contectBox}>
+        <div className={styles.contentBox}>
           <ChatHeader />
           <div className={styles.messageBox}>
             <Message />
@@ -50,8 +51,36 @@ export const App = () => {
             <Message />
             <Message />
             <Message />
+
+            <Message />
+            <Message />
+            <Message />
+            <Message />
+            <Message />
+            <Message />
+
+            <Message />
+            <Message />
+            <Message />
+            <Message />
+            <Message />
+            <Message />
+
+            <Message />
+            <Message />
+            <Message />
+            <Message />
+            <Message />
+            <Message />
+
+            <Message />
+            <Message />
+            <Message />
+            <Message />
+            <Message />
+            <Message />
           </div>
-          <div>{/* message selector */}</div>
+          <MessageInput />
         </div>
       </article>
     </main>
