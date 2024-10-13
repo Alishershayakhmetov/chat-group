@@ -1,3 +1,4 @@
+import GoogleAuthButton from "@/app/components/googleAuth";
 import styles from "../../styles/register.module.css";
 import SignInForm from "@/app/components/signInForm";
 
@@ -7,7 +8,7 @@ export default function SignUp() {
       <img src="/favicon.png" width={50} />
       <h1 className={styles.signUpText}>Sign In</h1>
       <SignInForm />
-      <div></div>
+      <GoogleAuthButton />
     </div>
   );
 }
