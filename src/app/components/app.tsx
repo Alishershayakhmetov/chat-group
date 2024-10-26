@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { TextField } from "@mui/material";
 import styles from "../styles/app.module.css";
 import { ChatSlide } from "./chatSlide";

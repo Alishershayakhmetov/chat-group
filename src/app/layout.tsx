@@ -58,11 +58,11 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.png" />
       </head>
       <body className={roboto.variable}>
-        <CustomSessionProvider session={session}>
-          <AppRouterCacheProvider>
-            <ThemeProvider theme={theme}>{children}</ThemeProvider>
-          </AppRouterCacheProvider>
-        </CustomSessionProvider>
+        {/*<CustomSessionProvider session={session}>*/}
+        <AppRouterCacheProvider>
+          <ThemeProvider theme={theme}>{children}</ThemeProvider>
+        </AppRouterCacheProvider>
+        {/*</CustomSessionProvider>*/}
       </body>
     </html>
   );
