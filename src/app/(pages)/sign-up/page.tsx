@@ -1,7 +1,6 @@
 import styles from "../../styles/register.module.css";
 import SignUpForm from "@/app/components/signUpForm";
 import SignInButton from "@/app/components/googleSignIn";
-import OrDivider from "@/app/components/orDivider";
 
 export default function SignUp() {
   return (

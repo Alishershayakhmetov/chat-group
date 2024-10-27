@@ -7,7 +7,7 @@ const nextConfig = {
           headers: [
             {
               key: "Access-Control-Allow-Origin",
-              value: process.env.BACKEND_URL, // Change to your allowed domain(s)
+              value: process.env.NEXT_PUBLIC_BASE_URL, // Change to your allowed domain(s)
             },
             {
               key: "Access-Control-Allow-Methods",
@@ -16,6 +16,10 @@ const nextConfig = {
             {
               key: "Access-Control-Allow-Headers",
               value: "X-Requested-With, Content-Type, Authorization",
+            },
+            {
+              key: "Access-Control-Allow-Credentials",
+              value: "true", // Allow credentials
             },
           ],
         },

@@ -2,19 +2,10 @@
 import { useState, useRef } from "react";
 import styles from "../styles/register.module.css";
 import TextField from "@mui/material/TextField";
-import { Button, Divider, Link, styled } from "@mui/material";
+import { Button, Link } from "@mui/material";
 import axios from "axios";
 import OrDivider from "./orDivider";
 import router from "next/router";
-
-const Root = styled("div")(({ theme }) => ({
-  width: "100%",
-  ...theme.typography.body2,
-  color: theme.palette.text.secondary,
-  "& > :not(style) ~ :not(style)": {
-    marginTop: theme.spacing(2),
-  },
-}));
 
 export default function SignUpForm() {
   const [fullName, setFullName] = useState("");
@@ -27,7 +18,7 @@ export default function SignUpForm() {
   const fullNameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
-  const codeRef = useRef<HTMLInputElement>(null); // For verification code field
+  const codeRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = async (
     email: string,
@@ -124,7 +115,10 @@ export default function SignUpForm() {
   return (
     <form
       className={styles.form}
-      onSubmit={() => handleSubmit(email, password, fullName)}
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleSubmit(email, password, fullName);
+      }}
     >
       {!isSubmitted ? (
         <>
@@ -143,6 +137,7 @@ export default function SignUpForm() {
             onChange={(e) => setEmail(e.target.value)}
             onKeyDown={(e) => handleKeyDown(e, "email")} // Add keydown handler
             inputRef={emailRef} // Attach ref
+            autoComplete="email"
           />
           <TextField
             label="Password *"
@@ -152,6 +147,7 @@ export default function SignUpForm() {
             onChange={(e) => setPassword(e.target.value)}
             onKeyDown={(e) => handleKeyDown(e, "password")} // Add keydown handler
             inputRef={passwordRef} // Attach ref
+            autoComplete="current-password"
           />
         </>
       ) : (
