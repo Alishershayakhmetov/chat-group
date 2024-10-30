@@ -5,9 +5,6 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 import { Roboto } from "next/font/google";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../theme";
-import { SessionProvider } from "next-auth/react";
-import { Session } from "next-auth";
-import { CustomSessionProvider } from "./sessionProvider";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -36,10 +33,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  session,
 }: Readonly<{
   children: React.ReactNode;
-  session: Session | null;
 }>) {
   return (
     <html lang="en">
@@ -58,11 +53,9 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.png" />
       </head>
       <body className={roboto.variable}>
-        {/*<CustomSessionProvider session={session}>*/}
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>{children}</ThemeProvider>
         </AppRouterCacheProvider>
-        {/*</CustomSessionProvider>*/}
       </body>
     </html>
   );

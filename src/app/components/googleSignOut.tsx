@@ -1,15 +1,16 @@
-import { signOut } from "@/auth";
+"use client";
 import { Button } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
+import axios from "axios";
 
 export function SignOutButton() {
+  const handleSubmit = () => {
+    const result = axios.get(
+      `${process.env.NEXT_PUBLIC_BASE_URL!}/api/auth/google`
+    );
+  };
   return (
-    <form
-      action={async () => {
-        "use server";
-        await signOut();
-      }}
-    >
+    <>
       <Button
         variant="outlined"
         type="submit"
@@ -23,9 +24,10 @@ export function SignOutButton() {
             backgroundColor: "rgba(66, 133, 244, 0.04)",
           },
         }}
+        onClick={handleSubmit}
       >
         Sign Out
       </Button>
-    </form>
+    </>
   );
 }

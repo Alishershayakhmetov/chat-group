@@ -27,6 +27,9 @@ export default function SignUpForm() {
     code?: string
   ) => {
     if (!isSubmitted) {
+      // HANDLE CASE: not fully entered form
+      if (!email || !password || !fullName) return;
+
       // Submit initial form data
       try {
         const response = await axios.post(
@@ -53,6 +56,9 @@ export default function SignUpForm() {
         }
       }
     } else {
+      // HANDLE CASE: not fully entered form
+      if (!email || !code) return;
+
       // Submit verification code
       try {
         const response = await axios.post(

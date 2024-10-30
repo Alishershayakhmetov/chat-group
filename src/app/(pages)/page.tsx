@@ -1,11 +1,9 @@
 import { App } from "../components/app";
 import styles from "../styles/page.module.css";
 import Button from "@mui/material/Button";
-import { auth } from "../../auth";
 
 export default async function Home() {
-  const session = await auth();
-  if (!session?.user)
+  /*
     return (
       <div className={styles.container}>
         <img src="/favicon.png" alt="Logo" className={styles.image} />
@@ -21,7 +19,7 @@ export default async function Home() {
           By registering, you agree to our terms and conditions.
         </p>
       </div>
-    );
+    */
 
   return <App />;
 }

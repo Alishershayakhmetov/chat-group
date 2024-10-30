@@ -17,6 +17,8 @@ export default function SignUpForm() {
   const passwordRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = async (email: String, password: String) => {
+    // HANDLE CASE: not fully entered form
+    if (!email || !password) return;
     try {
       const response = await axios.post(
         "http://localhost:3002/api/login",
@@ -30,9 +32,7 @@ export default function SignUpForm() {
       );
 
       if (response.status === 200) {
-        setTimeout(() => {
-          router.push("/");
-        }, 1000);
+        router.push("/");
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {

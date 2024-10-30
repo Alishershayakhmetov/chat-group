@@ -1,15 +1,13 @@
-import { signIn } from "@/auth";
+"use client";
 import { Button } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
 
 export default function SignInButton() {
+  const handleSubmit = () => {
+    window.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/google`;
+  };
   return (
-    <form
-      action={async () => {
-        "use server";
-        await signIn("google");
-      }}
-    >
+    <>
       <Button
         variant="outlined"
         type="submit"
@@ -23,9 +21,10 @@ export default function SignInButton() {
             backgroundColor: "rgba(66, 133, 244, 0.04)",
           },
         }}
+        onClick={handleSubmit}
       >
         Sign in with Google
       </Button>
-    </form>
+    </>
   );
 }
