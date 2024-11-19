@@ -11,7 +11,7 @@ import {
   Close as CloseIcon,
 } from "@mui/icons-material";
 
-import { MenuChooseProps } from "../interfaces/menuChooseProps";
+import { MenuChooseProps } from "../interfaces/interfaces";
 
 import React, { useState, useReducer } from "react";
 import Switch from "@mui/material/Switch";

@@ -1,0 +1,12 @@
+const ENV = {
+    AUTH_SECRET: process.env.AUTH_SECRET,
+    AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
+    AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
+    AUTH_GOOGLE_CALLBACKURL: process.env.AUTH_GOOGLE_CALLBACKURL,
+    AUTH_GOOGLE_CALLBACKURL_TEST: process.env.AUTH_GOOGLE_CALLBACKURL_TEST,
+    BASE_URL: process.env.WEB_URL,
+    AUTH_URL: process.env.NEXT_PUBLIC_BASE_URL,
+    SOCKET_URL: process.env.NEXT_PUBLIC_SOCKET_IO_URL!
+}
+
+export default ENV;

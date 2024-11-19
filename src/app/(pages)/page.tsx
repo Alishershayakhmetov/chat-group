@@ -1,25 +1,36 @@
+"use client";
+import { useEffect, useState } from "react";
 import { App } from "../components/app";
-import styles from "../styles/page.module.css";
-import Button from "@mui/material/Button";
+import axios from "axios";
+import HelloPage from "../components/helloPage";
+import URLS from "../utils/urls";
 
-export default async function Home() {
-  /*
-    return (
-      <div className={styles.container}>
-        <img src="/favicon.png" alt="Logo" className={styles.image} />
-        <p className={styles.p}>
-          Connect instantly with friends, family, and colleagues. Start
-          conversations, share moments, and stay in touch effortlessly.
-        </p>
-        <h4 className={styles.p}>Join the conversation now!</h4>
-        <a href="/sign-up">
-          <Button variant="contained">Register</Button>
-        </a>
-        <p className={styles.smallInfo}>
-          By registering, you agree to our terms and conditions.
-        </p>
-      </div>
-    */
+export default function Home() {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
-  return <App />;
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await axios.get(URLS.chechAuth, {
+          withCredentials: true,
+        });
+        setIsAuthenticated(response.data ? false : true);
+      } catch (error) {
+        console.error("Error checking authentication:", error);
+      }
+    };
+
+    checkAuth();
+  }, []);
+
+  if (isAuthenticated === null) {
+    // You can render a loading state here if needed
+    return <div>Loading...</div>;
+    // return <App />;
+  }
+
+  if (isAuthenticated) {
+    return <App />;
+  }
+  return <HelloPage />;
 }
