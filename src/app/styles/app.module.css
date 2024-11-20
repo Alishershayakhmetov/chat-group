@@ -97,3 +97,13 @@
 .messageBox::-webkit-scrollbar-thumb:hover {
     background-color: rgba(0, 0, 0, 0.5);
 }
+
+@media (max-width: 768px) {
+    .leftSlide {
+      width: 35%;
+    }
+  
+    .rightSlide {
+      width: 65%;
+    }
+  }

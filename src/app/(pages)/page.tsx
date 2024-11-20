@@ -4,6 +4,7 @@ import { App } from "../components/app";
 import axios from "axios";
 import HelloPage from "../components/helloPage";
 import URLS from "../utils/urls";
+import { SocketProvider } from "../contexts/socketContext";
 
 export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -30,7 +31,11 @@ export default function Home() {
   }
 
   if (isAuthenticated) {
-    return <App />;
+    return (
+      <SocketProvider>
+        <App />
+      </SocketProvider>
+    );
   }
   return <HelloPage />;
 }
