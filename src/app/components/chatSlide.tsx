@@ -1,3 +1,4 @@
+import { useSocketContext } from "../contexts/socketContext";
 import {
   chatLastMessageData,
   isObjectSearchedChats,
@@ -11,9 +12,16 @@ export const ChatSlide = ({
 }: {
   data: chatLastMessageData | searchedChats;
 }) => {
+  const socket = useSocketContext();
+
   if (isObjectSearchedChats(data))
     return (
-      <div className={styles.slide}>
+      <div
+        className={styles.slide}
+        onClick={() => {
+          socket.emit("enterChat", data.id);
+        }}
+      >
         <img src={data.imgURL} className={styles.image} />
         <div className={styles.infoBox}>
           <div className={styles.info}>

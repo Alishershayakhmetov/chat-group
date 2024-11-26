@@ -1,22 +1,25 @@
 export function FormatDate(date: Date, locale = 'default') {
     const now = new Date();
-    const inputDate = new Date(date);
 
     const options = { weekday: 'long', month: 'short', day: 'numeric' };
     
-    if (inputDate.toDateString() === now.toDateString()) {
+    if (date.toDateString() === now.toDateString()) {
         // HH:MM PM/AM?
-        return inputDate.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
-    } else if (isSameWeek(inputDate, now)) {
+        return date.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
+    } else if (isSameWeek(date, now)) {
         // short weekday
-        return inputDate.toLocaleDateString(locale, { weekday: 'short' });
-    } else if (inputDate.getFullYear() === now.getFullYear()) {
+        return date.toLocaleDateString(locale, { weekday: 'short' });
+    } else if (date.getFullYear() === now.getFullYear()) {
         // month day
-        return inputDate.toLocaleDateString(locale, { month: 'short', day: '2-digit' });
+        return date.toLocaleDateString(locale, { month: 'short', day: '2-digit' });
     } else {
         // day:month:year?
-        return inputDate.toLocaleDateString(locale);
+        return date.toLocaleDateString(locale);
     }
+}
+
+export function extractTime(date: Date, locale = 'default') {
+    return date.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
 }
 
 function isSameWeek(date1: Date, date2: Date) {

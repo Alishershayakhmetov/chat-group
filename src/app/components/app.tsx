@@ -7,36 +7,28 @@ import { Message } from "./message";
 import { LeftSlide } from "./leftSlide";
 import { MessageInput } from "./messageInput";
 import { useEffect, useRef, useState } from "react";
-import { chatData, searchedChats } from "../interfaces/interfaces";
+import { chatLastMessageData, searchedChats } from "../interfaces/interfaces";
 import { useSocketContext } from "../contexts/socketContext";
+import { ChatForm } from "./chatForm";
 
 export const App = () => {
-  const socket = useSocketContext().current;
+  const socket = useSocketContext();
 
-  const [chats, setChats] = useState<chatData[]>([]);
+  const [chats, setChats] = useState<chatLastMessageData[]>([]);
   const [searchInput, setSearchInput] = useState("");
   const [searchResults, setSearchResults] = useState<searchedChats[] | null>(
     null
   );
 
-  useEffect(() => {
-    if (!socket) return;
-    // Listen for the "chats" event and update the state
-    socket.on("chats", (chatsList) => {
-      setChats(chatsList);
-    });
+  // Listen for the "chats" event and update the state
+  socket.on("chats", (chatsList) => {
+    setChats(chatsList);
+  });
 
-    // Listen for the "searchResults" event to update the search results
-    socket.on("searchResult", (results) => {
-      setSearchResults(results);
-    });
-
-    return () => {
-      // Cleanup listeners on unmount
-      socket?.off("chats");
-      socket?.off("searchResults");
-    };
-  }, [socket]);
+  // Listen for the "searchResults" event to update the search results
+  socket.on("searchResult", (results) => {
+    setSearchResults(results);
+  });
 
   // Inside your App component
   const handleSearchInput = (() => {
@@ -72,61 +64,24 @@ export const App = () => {
           />
         </header>
         <div className={styles.contactsList}>
-          {searchInput && searchInput.length !== 0 && searchResults ? (
-            searchResults.map((chat: searchedChats) => (
-              <ChatSlide key={chat.id} data={chat} />
-            ))
+          {searchInput && searchInput.length !== 0 ? (
+            searchResults && searchResults.length !== 0 ? (
+              searchResults.map((chat: searchedChats) => (
+                <ChatSlide key={chat.id} data={chat} />
+              ))
+            ) : (
+              <div>No result</div>
+            )
           ) : chats.length === 0 ? (
             <div>You have no chats</div>
           ) : (
-            chats.map((chat: chatData) => (
-              <ChatSlide key={chat.id} data={chat.data} />
+            chats.map((chat: chatLastMessageData) => (
+              <ChatSlide key={chat.id} data={chat} />
             ))
           )}
         </div>
       </section>
-      <article className={styles.rightSlide}>
-        <div className={styles.contentBox}>
-          <ChatHeader />
-          <div className={styles.messageBox}>
-            <Message />
-            <Message />
-            <Message />
-            <Message />
-            <Message />
-            <Message />
-
-            <Message />
-            <Message />
-            <Message />
-            <Message />
-            <Message />
-            <Message />
-
-            <Message />
-            <Message />
-            <Message />
-            <Message />
-            <Message />
-            <Message />
-
-            <Message />
-            <Message />
-            <Message />
-            <Message />
-            <Message />
-            <Message />
-
-            <Message />
-            <Message />
-            <Message />
-            <Message />
-            <Message />
-            <Message />
-          </div>
-          <MessageInput />
-        </div>
-      </article>
+      <ChatForm />
     </main>
   );
 };

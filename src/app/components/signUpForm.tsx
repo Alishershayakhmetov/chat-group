@@ -5,9 +5,10 @@ import TextField from "@mui/material/TextField";
 import { Button, Link } from "@mui/material";
 import axios from "axios";
 import OrDivider from "./orDivider";
-import router from "next/router";
+import { useRouter } from "next/navigation";
 
 export default function SignUpForm() {
+  const router = useRouter(); // Use the useRouter hook
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -123,7 +124,7 @@ export default function SignUpForm() {
       className={styles.form}
       onSubmit={(e) => {
         e.preventDefault();
-        handleSubmit(email, password, fullName);
+        handleSubmit(email, password, fullName, code);
       }}
     >
       {!isSubmitted ? (

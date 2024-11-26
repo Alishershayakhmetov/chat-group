@@ -1,13 +1,9 @@
 import Image from "next/image";
 import styles from "../styles/message.module.css";
+import { message } from "../interfaces/interfaces";
+import { extractTime } from "../utils/formatDate";
 
-export const Message = () => {
-  const data = {
-    imgURL: "/favicon.png",
-    message: "Message Message",
-    time: "17:45",
-    userName: "User Name",
-  };
+export const Message = ({ data }: { data: message }) => {
   return (
     <div className={styles.messageBox}>
       <div className={styles.profileImageBox}>
@@ -16,10 +12,10 @@ export const Message = () => {
       <div className={styles.rightBox}>
         <div className={styles.contentBox}>
           <span>{data.userName}</span>
-          <pre>{data.message}</pre>
+          <pre>{data.text}</pre>
         </div>
         <div className={styles.relative}>
-          <span className={styles.time}>{data.time}</span>
+          <span className={styles.time}>{extractTime(data.date)}</span>
         </div>
       </div>
     </div>

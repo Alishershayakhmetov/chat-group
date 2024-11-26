@@ -1,38 +1,27 @@
 import { useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 
-const useSocket = (serverUrl: string): React.MutableRefObject<Socket | null> => {
-  const socket = useRef<Socket | null>(null);
+const useSocket = (serverUrl: string): Socket => {
+  const socket = io(serverUrl, {
+    withCredentials: true,
+    transports: ["websocket"],
+  });
 
-  useEffect(() => {
-    // Initialize the socket connection
-    const newSocket = io(serverUrl, {
-      withCredentials: true,
-      transports: ["websocket"],
-    });
-    socket.current = newSocket;
-
-    newSocket.on("connect", () => {
-      console.log("Connected to server:", newSocket.id);
+  socket.on("connect", () => {
+      console.log("Connected to server:", socket.id);
     });
 
-    newSocket.on("error", (error) => {
+  socket.on("error", (error) => {
       console.error("Socket error:", error);
     });
     
-    newSocket.on("connect_error", (error) => {
+  socket.on("connect_error", (error) => {
       console.error("Connection error:", error);
     });
     
-    newSocket.on("disconnect", (reason) => {
+  socket.on("disconnect", (reason) => {
       console.log("Disconnected from server:", reason);
     });
-
-    return () => {
-      // Clean up the socket connection
-      newSocket.disconnect();
-    };
-  }, [serverUrl]);
 
   return socket;
 };

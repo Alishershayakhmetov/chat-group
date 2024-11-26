@@ -1,14 +1,14 @@
 import React, { MutableRefObject, createContext, useContext } from "react";
 import ENV from "../utils/env";
 import useSocket from "../hooks/useSocket";
-import { CustomSocket } from "../interfaces/interfaces";
+import { Socket } from "socket.io-client";
 
-const SocketContext = createContext<CustomSocket | null>(null);
+const SocketContext = createContext<Socket | null>(null);
 
 export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const socket: any = useSocket(ENV.SOCKET_URL);
+  const socket = useSocket(ENV.SOCKET_URL);
 
   return (
     <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>

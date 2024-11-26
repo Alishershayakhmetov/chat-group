@@ -6,17 +6,13 @@ export interface MenuChooseProps {
 }
 
 export interface chatLastMessageData {
+  id: string
   imgURL: string,
   chatName: string,
   messageTime: Date,
   messageAuthor: string,
   MessageContent: string,
   icon?: number,
-}
-
-export interface chatData {
-  id: string,
-  data: chatLastMessageData,
 }
 
 export interface searchedChats {
@@ -35,8 +31,37 @@ export interface searchedChats {
   icon: number | null
 }
 
-export interface CustomSocket extends Socket {
-  current: Socket;
+export interface message {
+  id: String,
+  date: Date,
+  text: String, // Text
+  attachments: attachments[], // image, video, audio, file
+  userId: String,
+  roomId: String,
+  isEdited:  Boolean,
+  imgURL: string,
+  userName: string
+}
+
+export interface attachments {
+  id: string,
+  messageId: string,
+  fileUrl: String,
+  createdAt: Date,
+}
+
+export interface roomData {
+  id: string,
+  imgURL: string,
+  roomName: string,
+  roomType: "chat" | "group" | "channel",
+  numberOfMembers?: string,
+  lastActiveTime?: Date,
+}
+
+export interface roomDataWithMessages {
+  roomData: roomData,
+  messages: message[]
 }
 
 export function isObjectSearchedChats (object: any): object is searchedChats {

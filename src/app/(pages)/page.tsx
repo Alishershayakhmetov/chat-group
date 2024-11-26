@@ -18,6 +18,7 @@ export default function Home() {
         setIsAuthenticated(response.data ? false : true);
       } catch (error) {
         console.error("Error checking authentication:", error);
+        setIsAuthenticated(false);
       }
     };
 
@@ -27,7 +28,6 @@ export default function Home() {
   if (isAuthenticated === null) {
     // You can render a loading state here if needed
     return <div>Loading...</div>;
-    // return <App />;
   }
 
   if (isAuthenticated) {
