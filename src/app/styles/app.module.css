@@ -11,7 +11,7 @@
     flex-direction: column;
     height: 100vh; /* Ensures the left section takes full height */
 }
-  
+
 .rightSlide {
     width: 70%;
     background-image: url("/background-chat-612x612.jpg");

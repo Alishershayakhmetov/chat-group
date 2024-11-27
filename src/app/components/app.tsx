@@ -7,7 +7,11 @@ import { Message } from "./message";
 import { LeftSlide } from "./leftSlide";
 import { MessageInput } from "./messageInput";
 import { useEffect, useRef, useState } from "react";
-import { chatLastMessageData, searchedChats } from "../interfaces/interfaces";
+import {
+  chatLastMessageData,
+  roomDataWithMessages,
+  searchedChats,
+} from "../interfaces/interfaces";
 import { useSocketContext } from "../contexts/socketContext";
 import { ChatForm } from "./chatForm";
 
@@ -19,6 +23,7 @@ export const App = () => {
   const [searchResults, setSearchResults] = useState<searchedChats[] | null>(
     null
   );
+  const [roomData, setRoomData] = useState<roomDataWithMessages | null>(null);
 
   // Listen for the "chats" event and update the state
   socket.on("chats", (chatsList) => {
@@ -28,6 +33,11 @@ export const App = () => {
   // Listen for the "searchResults" event to update the search results
   socket.on("searchResult", (results) => {
     setSearchResults(results);
+  });
+
+  socket.on("enterChat", (data) => {
+    console.log("roomData: ", data);
+    setRoomData(data);
   });
 
   // Inside your App component
@@ -81,7 +91,9 @@ export const App = () => {
           )}
         </div>
       </section>
-      <ChatForm />
+      <article className={styles.rightSlide}>
+        {roomData && <ChatForm roomData={roomData} />}
+      </article>
     </main>
   );
 };

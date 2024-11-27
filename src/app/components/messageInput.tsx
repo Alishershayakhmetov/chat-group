@@ -5,9 +5,10 @@ import Input from "@mui/material/Input";
 import { IconButton } from "@mui/material";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MicIcon from "@mui/icons-material/Mic"; // Mic icon for voice
 import SendIcon from "@mui/icons-material/Send"; // Send icon
+import { useSocketContext } from "../contexts/socketContext";
 
 interface FileAttachmentProps {
   onFileSelect: (file: File) => void;
@@ -19,13 +20,25 @@ interface EmojiPickerProps {
 
 const ariaLabel = { "aria-label": "Type message box" };
 
-export const MessageInput = () => {
+export const MessageInput = ({ roomId }: { roomId: string }) => {
   const [message, setMessage] = useState("");
+  const [files, setFiles] = useState<File[]>([]);
+  const socket = useSocketContext();
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      console.log(file); // Pass the selected file to the parent component
+    const selectedFiles = event.target.files;
+    if (selectedFiles) {
+      const fileArray = Array.from(selectedFiles);
+      if (files.length + fileArray.length > 10) {
+        alert("You can only attach up to 10 files."); // ADD NEW MESSAGE
+        return;
+      }
+      setFiles((prevFiles) => [...prevFiles, ...fileArray]);
     }
+  };
+
+  // Remove a specific file
+  const handleRemoveFile = (fileToRemove: File) => {
+    setFiles((prevFiles) => prevFiles.filter((file) => file !== fileToRemove));
   };
 
   const handleEmojiClick = () => {
@@ -35,8 +48,24 @@ export const MessageInput = () => {
   };
 
   const handleSend = () => {
-    console.log("Message sent:", message);
-    setMessage(""); // Clear message after sending
+    if (!message.trim() && files.length === 0) {
+      alert("Cannot send an empty message.");
+      return;
+    }
+
+    // Construct payload
+    const payload = {
+      roomId,
+      text: message.trim(),
+      attachments: files, // This will be an array of File objects
+    };
+
+    socket.emit("sendMessage", payload);
+    console.log("Message sent:", payload);
+
+    // Clear message and files
+    setMessage("");
+    setFiles([]);
   };
 
   const handleVoiceRecord = () => {
@@ -74,6 +103,7 @@ export const MessageInput = () => {
           <input
             type="file"
             id="file-upload"
+            multiple
             style={{ display: "none" }} // Hide the default file input
             onChange={handleFileChange}
           />
@@ -86,10 +116,10 @@ export const MessageInput = () => {
       </div>
       <div className={styles.rightBox}>
         {/* Voice message or Send button */}
-        {message ? (
+        {message || files.length ? (
           <IconButton
             onClick={handleSend}
-            disabled={!message}
+            disabled={!message && files.length == 0}
             className={styles.fade}
           >
             <SendIcon />
@@ -100,6 +130,19 @@ export const MessageInput = () => {
           </IconButton>
         )}
       </div>
+      {/* Display attached files */}
+      {files.length > 0 && (
+        <div className={styles.attachedFiles}>
+          {files.map((file, index) => (
+            <div key={index} className={styles.fileItem}>
+              <span>{file.name}</span>
+              <IconButton size="small" onClick={() => handleRemoveFile(file)}>
+                ❌
+              </IconButton>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

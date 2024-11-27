@@ -1,6 +1,7 @@
 import Image from "next/image";
 import styles from "../styles/chat.module.css";
 import { roomData } from "../interfaces/interfaces";
+import UserImage from "./userImage";
 
 export const ChatHeader = ({ data }: { data: roomData | undefined }) => {
   const chatStatus =
@@ -13,7 +14,7 @@ export const ChatHeader = ({ data }: { data: roomData | undefined }) => {
   return (
     <div className={styles.chatHeaderBox}>
       <div className={styles.chatNameBox}>
-        <img className={styles.image} src={data && data.imgURL} />
+        <UserImage className={styles.image} src={data && data.imgURL} />
         <div className={styles.chatNameInfoBox}>
           <p>{data && data.roomName}</p>
           <p>{chatStatus}</p>

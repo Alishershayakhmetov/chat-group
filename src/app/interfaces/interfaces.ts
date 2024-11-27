@@ -57,6 +57,7 @@ export interface roomData {
   roomType: "chat" | "group" | "channel",
   numberOfMembers?: string,
   lastActiveTime?: Date,
+  isActive?: Boolean
 }
 
 export interface roomDataWithMessages {

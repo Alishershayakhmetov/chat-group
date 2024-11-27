@@ -6,6 +6,7 @@ import {
 } from "../interfaces/interfaces";
 import styles from "../styles/chat.module.css";
 import { FormatDate } from "../utils/formatDate";
+import UserImage from "./userImage";
 
 export const ChatSlide = ({
   data,
@@ -22,7 +23,7 @@ export const ChatSlide = ({
           socket.emit("enterChat", data.id);
         }}
       >
-        <img src={data.imgURL} className={styles.image} />
+        <UserImage src={data.imgURL} className={styles.image} alt="qwerty" />
         <div className={styles.infoBox}>
           <div className={styles.info}>
             <p>
@@ -48,7 +49,7 @@ export const ChatSlide = ({
 
   return (
     <div className={styles.slide}>
-      <img src={data.imgURL} className={styles.image} />
+      <UserImage src={data.imgURL} className={styles.image} />
       <div className={styles.infoBox}>
         <div className={styles.info}>
           <p>{data.chatName}</p>
