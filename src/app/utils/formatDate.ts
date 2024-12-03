@@ -1,24 +1,24 @@
-export function FormatDate(date: Date, locale = 'default') {
+export function FormatDate(dateString: string, locale = 'default') {
+    const date = new Date(dateString); // Convert the string to a Date object
     const now = new Date();
 
-    const options = { weekday: 'long', month: 'short', day: 'numeric' };
-    
     if (date.toDateString() === now.toDateString()) {
-        // HH:MM PM/AM?
+        // Return HH:MM AM/PM for today's date
         return date.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
     } else if (isSameWeek(date, now)) {
-        // short weekday
+        // Return short weekday for dates in the same week
         return date.toLocaleDateString(locale, { weekday: 'short' });
     } else if (date.getFullYear() === now.getFullYear()) {
-        // month day
+        // Return month day for dates in the current year
         return date.toLocaleDateString(locale, { month: 'short', day: '2-digit' });
     } else {
-        // day:month:year?
+        // Return the full date for other cases
         return date.toLocaleDateString(locale);
     }
 }
 
-export function extractTime(date: Date, locale = 'default') {
+export function extractTime(dateString: string, locale = 'default') {
+    const date = new Date(dateString);
     return date.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
 }
 

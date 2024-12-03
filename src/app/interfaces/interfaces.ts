@@ -6,13 +6,14 @@ export interface MenuChooseProps {
 }
 
 export interface chatLastMessageData {
-  id: string
-  imgURL: string,
+  roomId: string
+  chatImgURL: string,
   chatName: string,
-  messageTime: Date,
-  messageAuthor: string,
-  MessageContent: string,
-  icon?: number,
+  lastMessageTime: string,
+  messageUserName: string,
+  messageText: string,
+  isMessageForwarded: boolean,
+  numberOfUnreadMessages?: number,
 }
 
 export interface searchedChats {
@@ -25,19 +26,20 @@ export interface searchedChats {
   type: "user" | 'channel',
 
   imgURL: string,
-  messageTime: Date | null,
+  messageTime: string | null,
   messageAuthor: string | null,
   lastMessageContent: string | null,
   icon: number | null
 }
 
 export interface message {
-  id: String,
-  date: Date,
-  text: String, // Text
-  attachments: attachments[], // image, video, audio, file
-  userId: String,
-  roomId: String,
+  id: string,
+  updatedAt: string,
+  createdAt: string,
+  text: string, // Text
+  attachments: string[], // image, video, audio, file
+  userId: string,
+  roomId: string,
   isEdited:  Boolean,
   imgURL: string,
   userName: string

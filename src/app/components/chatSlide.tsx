@@ -14,8 +14,7 @@ export const ChatSlide = ({
   data: chatLastMessageData | searchedChats;
 }) => {
   const socket = useSocketContext();
-
-  if (isObjectSearchedChats(data))
+  if (isObjectSearchedChats(data)) {
     return (
       <div
         className={styles.slide}
@@ -46,19 +45,24 @@ export const ChatSlide = ({
         </div>
       </div>
     );
-
+  }
   return (
-    <div className={styles.slide}>
-      <UserImage src={data.imgURL} className={styles.image} />
+    <div
+      className={styles.slide}
+      onClick={() => {
+        socket.emit("enterChat", data.roomId);
+      }}
+    >
+      <UserImage src={data.chatImgURL} className={styles.image} />
       <div className={styles.infoBox}>
         <div className={styles.info}>
           <p>{data.chatName}</p>
-          <p>{FormatDate(data.messageTime)}</p>
+          <p>{FormatDate(data.lastMessageTime)}</p>
         </div>
         <div className={styles.info}>
-          <p>{`${data.messageAuthor}: ${data.MessageContent}`}</p>
+          <p>{`${data.messageUserName}: ${data.messageText}`}</p>
           <p>
-            <span>{data.icon}</span>
+            <span>{data.numberOfUnreadMessages}</span>
           </p>
         </div>
       </div>

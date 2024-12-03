@@ -21,6 +21,7 @@ interface EmojiPickerProps {
 const ariaLabel = { "aria-label": "Type message box" };
 
 export const MessageInput = ({ roomId }: { roomId: string }) => {
+  console.log(`roomId roomId roomId ${roomId}`);
   const [message, setMessage] = useState("");
   const [files, setFiles] = useState<File[]>([]);
   const socket = useSocketContext();
