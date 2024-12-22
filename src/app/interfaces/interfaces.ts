@@ -33,16 +33,32 @@ export interface searchedChats {
 }
 
 export interface message {
-  id: string,
-  updatedAt: string,
-  createdAt: string,
+  id?: string,
+  // updatedAt: string,
+  // createdAt: string,
+  updatedAt: Date,
+  createdAt: Date,
   text: string, // Text
-  attachments: string[], // image, video, audio, file
-  userId: string,
-  roomId: string,
+  // attachments: string[], // image, video, audio, file
+  attachments: {
+    fileURL?: string,
+    fileName: string,
+    isNamePersist?: boolean
+  }[],
+  userId?: string,
+  roomId?: string,
   isEdited:  Boolean,
-  imgURL: string,
-  userName: string
+  imgURL?: string,
+  userName?: string,
+
+  status: MessageStatus,
+  tempId?: string
+}
+
+export enum MessageStatus {
+  Sending = "sending",
+  Sent = "sent",
+  Failed = "failed",
 }
 
 export interface attachments {

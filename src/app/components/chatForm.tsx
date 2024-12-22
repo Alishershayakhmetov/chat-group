@@ -13,9 +13,20 @@ import { MessageInput } from "./messageInput";
 export const ChatForm = ({
   roomData,
   messages,
+  addTemp,
 }: {
   roomData: roomData;
   messages: message[];
+  addTemp: ({
+    text,
+    attachments,
+  }: {
+    text: string;
+    attachments: {
+      fileName: string;
+      isNamePersist: boolean;
+    }[];
+  }) => string;
 }) => {
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
@@ -25,8 +36,6 @@ export const ChatForm = ({
       bottomRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
-  console.log("problem with messages debug: ", messages);
-  console.log(`qazqazqazqazqaz roomId roomId roomId ${roomData.id}`);
 
   return (
     <div className={styles.contentBox}>
@@ -34,11 +43,12 @@ export const ChatForm = ({
       <div className={styles.messageBox}>
         {messages &&
           messages.map((message: message, index) => (
-            <Message key={message.id} data={message} />
+            // get wanting with key={message.id}
+            <Message key={index} data={message} />
           ))}
         <div ref={bottomRef} />
       </div>
-      <MessageInput roomId={roomData.id} />
+      <MessageInput roomId={roomData.id} addTemp={addTemp} />
     </div>
   );
 };

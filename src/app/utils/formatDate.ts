@@ -1,4 +1,4 @@
-export function FormatDate(dateString: string, locale = 'default') {
+export function FormatDate(dateString: string | Date, locale = 'default') {
     const date = new Date(dateString); // Convert the string to a Date object
     const now = new Date();
 
@@ -17,7 +17,7 @@ export function FormatDate(dateString: string, locale = 'default') {
     }
 }
 
-export function extractTime(dateString: string, locale = 'default') {
+export function extractTime(dateString: string | Date, locale = 'default') {
     const date = new Date(dateString);
     return date.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
 }

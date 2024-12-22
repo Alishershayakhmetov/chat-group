@@ -13,9 +13,11 @@ import {
   searchedChats,
   message,
   roomData,
+  MessageStatus,
 } from "../interfaces/interfaces";
 import { useSocketContext } from "../contexts/socketContext";
 import { ChatForm } from "./chatForm";
+import { v4 as uuid } from "uuid";
 
 export const App = () => {
   const socket = useSocketContext();
@@ -64,8 +66,25 @@ export const App = () => {
       setMessages(data.messages);
     };
     const handleNewMessage = (data: message) => {
-      console.log(data);
-      setMessages((prevMessages) => [...prevMessages, data]);
+      console.log(`Received new message: ${data.tempId}`);
+
+      setMessages((prevMessages) => {
+        const DuplicateIndex = prevMessages.findIndex(
+          (message) => message.tempId === data.tempId
+        );
+
+        if (DuplicateIndex !== -1) {
+          // Replace the existing message with the new data
+          console.log("Duplicate message replaced:", data);
+          const updatedMessages = [...prevMessages];
+          updatedMessages[DuplicateIndex] = data;
+          return updatedMessages;
+        }
+
+        // Add new message to the array
+        console.log("New message added:", data);
+        return [...prevMessages, data];
+      });
     };
 
     // Register event listeners
@@ -83,13 +102,27 @@ export const App = () => {
     };
   }, [socket]); // Dependency array ensures this runs only once
 
-  useEffect(() => {
-    console.log(`qwert ${roomData?.id}`);
-  }, [roomData]);
+  const handleAddTempMessage = ({
+    text,
+    attachments,
+  }: {
+    text: string;
+    attachments: { fileName: string; isNamePersist: boolean }[];
+  }) => {
+    const tempId = uuid();
+    const tempMes: message = {
+      tempId,
+      text,
+      attachments,
+      updatedAt: new Date(),
+      createdAt: new Date(),
+      isEdited: false,
+      status: MessageStatus.Sending,
+    };
 
-  useEffect(() => {
-    console.log(`qwert searchInput ${searchResults}`);
-  }, [searchResults]);
+    setMessages((prevMessage) => [...prevMessage, tempMes]);
+    return tempId;
+  };
 
   // Inside your App component
   const handleSearchInput = (() => {
@@ -143,7 +176,13 @@ export const App = () => {
         </div>
       </section>
       <article className={styles.rightSlide}>
-        {roomData && <ChatForm roomData={roomData} messages={messages} />}
+        {roomData && (
+          <ChatForm
+            roomData={roomData}
+            messages={messages}
+            addTemp={handleAddTempMessage}
+          />
+        )}
       </article>
     </main>
   );
