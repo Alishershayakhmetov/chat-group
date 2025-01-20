@@ -11,32 +11,27 @@ import {
   Close as CloseIcon,
 } from "@mui/icons-material";
 
-import { MenuChooseProps } from "../interfaces/interfaces";
-
-import React, { useState, useReducer } from "react";
+import React, { useState, useEffect } from "react";
 import Switch from "@mui/material/Switch";
 
 const label = { inputProps: { "aria-label": "Dark Mode Switch" } };
-const initialState = { isSelected: false };
 
-function reducer(state: { isSelected: boolean }, action: { type: "toggle" }) {
-  switch (action.type) {
-    case "toggle":
-      return { isSelected: !state.isSelected };
-    default:
-      return state;
-  }
-}
+const LeftSlideBox: React.FC<{ isVisible: boolean; onClose: () => void }> = ({
+  isVisible,
+  onClose,
+}) => {
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const savedMode = localStorage.getItem("isDarkMode");
+    return savedMode ? JSON.parse(savedMode) : false;
+  });
 
-const LeftSlideBox: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  const handleDarkModeToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIsDarkMode(event.target.checked);
-    if (event.target.checked) {
-      // document.body.classList.add("dark-mode");
+  const handleDarkModeToggle = () => {
+    setIsDarkMode(!isDarkMode);
+    localStorage.setItem("isDarkMode", JSON.stringify(!isDarkMode));
+    if (!isDarkMode) {
+      document.body.classList.add("dark-mode");
     } else {
-      // document.body.classList.remove("dark-mode");
+      document.body.classList.remove("dark-mode");
     }
   };
   const data = {
@@ -45,9 +40,13 @@ const LeftSlideBox: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   };
 
   return (
-    <div className={`${styles.leftSlideBox} ${styles.visible}`}>
+    <div
+      className={`${styles.leftSlideBox} ${
+        isVisible ? styles.visible : styles.hidden
+      }`}
+    >
       <header className={styles.slideHeader}>
-        <CloseIcon sx={{ fontSize: 34, color: "black" }} onClick={onClose} />
+        <CloseIcon sx={{ fontSize: 40, color: "black" }} onClick={onClose} />
         <Image
           src={data.imgURL}
           alt="Profile Image"
@@ -94,7 +93,10 @@ const LeftSlideBox: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   );
 };
 
-const MenuChoose: React.FC<MenuChooseProps> = ({ icon, text }) => {
+const MenuChoose: React.FC<{ icon: React.ReactNode; text: string }> = ({
+  icon,
+  text,
+}) => {
   return (
     <div className={styles.menuChooseBox}>
       {icon}
@@ -104,21 +106,18 @@ const MenuChoose: React.FC<MenuChooseProps> = ({ icon, text }) => {
 };
 
 export const LeftSlide = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [isVisible, setIsVisible] = useState(false);
 
   return (
     <>
-      {state.isSelected ? (
-        <LeftSlideBox onClose={() => dispatch({ type: "toggle" })} />
-      ) : (
-        <Image
-          src={"/menu-menu.svg"}
-          alt={"menu"}
-          width={32}
-          height={32}
-          onClick={() => dispatch({ type: "toggle" })}
-        />
-      )}
+      <LeftSlideBox isVisible={isVisible} onClose={() => setIsVisible(false)} />
+      <Image
+        src={"/menu-menu.svg"}
+        alt={"menu"}
+        width={32}
+        height={32}
+        onClick={() => setIsVisible(true)}
+      />
     </>
   );
 };

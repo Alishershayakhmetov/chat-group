@@ -107,7 +107,11 @@ export const App = () => {
     attachments,
   }: {
     text: string;
-    attachments: { fileName: string; isNamePersist: boolean }[];
+    attachments: {
+      fileName: string;
+      saveAsMedia: boolean;
+      fileURL: string;
+    }[];
   }) => {
     const tempId = uuid();
     const tempMes: message = {

@@ -40,11 +40,7 @@ export interface message {
   createdAt: Date,
   text: string, // Text
   // attachments: string[], // image, video, audio, file
-  attachments: {
-    fileURL?: string,
-    fileName: string,
-    isNamePersist?: boolean
-  }[],
+  attachments: attachment[],
   userId?: string,
   roomId?: string,
   isEdited:  Boolean,
@@ -61,11 +57,10 @@ export enum MessageStatus {
   Failed = "failed",
 }
 
-export interface attachments {
-  id: string,
-  messageId: string,
-  fileUrl: String,
-  createdAt: Date,
+export interface attachment {
+  fileURL: string,
+  fileName: string,
+  saveAsMedia?: boolean
 }
 
 export interface roomData {

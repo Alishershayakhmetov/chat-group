@@ -24,7 +24,8 @@ export const ChatForm = ({
     text: string;
     attachments: {
       fileName: string;
-      isNamePersist: boolean;
+      saveAsMedia: boolean;
+      fileURL: string;
     }[];
   }) => string;
 }) => {

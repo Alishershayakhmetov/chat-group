@@ -1,5 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'chat-app-direct-upload-s3-bucket.s3.eu-north-1.amazonaws.com',
+        // port: '',
+        // pathname: '/account123/**',
+        // search: '',
+      },
+    ],
+  },
     async headers() {
       return [
         {

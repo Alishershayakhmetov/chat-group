@@ -12,6 +12,7 @@ import { useSocketContext } from "../contexts/socketContext";
 import axios from "axios";
 import { message } from "../interfaces/interfaces";
 import { v4 as uuid } from "uuid";
+import SelectFiles from "./selectFiles";
 
 interface FileAttachmentProps {
   onFileSelect: (file: File) => void;
@@ -35,26 +36,36 @@ export const MessageInput = ({
     text: string;
     attachments: {
       fileName: string;
-      isNamePersist: boolean;
+      saveAsMedia: boolean;
+      fileURL: string;
     }[];
   }) => string;
 }) => {
   console.log(`roomId roomId roomId ${roomId}`);
   const [message, setMessage] = useState("");
-  const [files, setFiles] = useState<{ file: File; isNamePersist: boolean }[]>(
+  const [files, setFiles] = useState<{ file: File; saveAsMedia: boolean }[]>(
     []
   );
+  const [showFileWindow, setShowFileWindow] = useState(false);
   const socket = useSocketContext();
+
+  const handleSetText = (text: string) => {
+    setMessage(text);
+  };
+  const handleCloseWindow = () => {
+    setFiles([]);
+    setShowFileWindow(false);
+  };
 
   const handleFileChange = (
     event: React.ChangeEvent<HTMLInputElement>,
-    isNamePersist = true
+    saveAsMedia = true
   ) => {
     const selectedFiles = event.target.files;
     if (selectedFiles) {
       const fileArray = Array.from(selectedFiles).map((file) => ({
         file,
-        isNamePersist,
+        saveAsMedia,
       }));
 
       if (files.length + fileArray.length > 10) {
@@ -63,6 +74,7 @@ export const MessageInput = ({
       }
 
       setFiles((prevFiles) => [...prevFiles, ...fileArray]);
+      setShowFileWindow(true);
     }
   };
 
@@ -70,6 +82,17 @@ export const MessageInput = ({
   const handleRemoveFile = (indexToRemove: number) => {
     setFiles((prevFiles) =>
       prevFiles.filter((_, index) => index !== indexToRemove)
+    );
+  };
+
+  const handleFileTypeChange = (index: number) => {
+    setFiles(
+      files.map((file, ind) => {
+        if (ind === index) {
+          return { ...file, saveAsMedia: !file.saveAsMedia };
+        }
+        return file;
+      })
     );
   };
 
@@ -194,7 +217,8 @@ export const MessageInput = ({
     const text = message.trim();
     const attachments = files.map((file) => ({
       fileName: file.file.name,
-      isNamePersist: file.isNamePersist,
+      saveAsMedia: file.saveAsMedia,
+      fileURL: URL.createObjectURL(file.file),
     }));
     const tempId = addTemp({ text, attachments });
 
@@ -233,7 +257,7 @@ export const MessageInput = ({
           key: url.key,
           name: files[index].file.name,
           url: url.url.split("?")[0], // Remove query parameters from URL
-          isNamePersist: files[index].isNamePersist,
+          saveAsMedia: files[index].saveAsMedia,
         })
       );
 
@@ -284,7 +308,7 @@ export const MessageInput = ({
               multiline
               fullWidth
               value={message}
-              onChange={(e) => setMessage(e.target.value)}
+              onChange={(e) => handleSetText(e.target.value)}
             />
           </Box>
         </div>
@@ -320,7 +344,20 @@ export const MessageInput = ({
         )}
       </div>
       {/* Display attached files */}
-      {files.length > 0 && (
+      {showFileWindow && (
+        <SelectFiles
+          files={files}
+          text={message}
+          onDeleteFile={handleRemoveFile}
+          onClose={handleCloseWindow}
+          onTextChange={handleSetText}
+          onFileChange={handleFileChange}
+          onSend={handleSend}
+          onFileTypeChange={handleFileTypeChange}
+        />
+      )}
+
+      {/* files.length > 0 && (
         <div className={styles.attachedFiles}>
           {files.map((file, index) => (
             <div key={index} className={styles.fileItem}>
@@ -331,7 +368,7 @@ export const MessageInput = ({
             </div>
           ))}
         </div>
-      )}
+          ) */}
     </div>
   );
 };

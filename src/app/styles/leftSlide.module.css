@@ -1,45 +1,48 @@
+/* leftSlide.module.css */
+
 .profileImage {
-    border-radius: 100%;
+  border-radius: 100%;
 }
+
 .menuChooseBox {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    text-align: center;
-    gap: 8px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
 }
+
 .slideHeader {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
+  row-gap: 6px;
 }
-
-
-/* styles/leftSlide.module.css */
 
 .leftSlideBox {
-    position: fixed; /* Fix the position so it stays in view */
-    left: 0; /* Align to the left */
-    top: 0; /* Align to the top */
-    width: 250px; /* Width of the sidebar */
-    height: 100%; /* Full height */
-    background-color: white; /* Background color */
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5); /* Shadow for depth */
-    transition: transform 0.3s ease; /* Smooth transition for slide effect */
-    transform: translateX(-100%); /* Initially hidden offscreen */
-    z-index: 1000; /* Ensure it is above other content */
-  }
-  
-  /* doesn't work */
-  .visible {
-    transform: translateX(0); /* Show when the class is added */
-  }
-  
-  /* Optional: Styles for the chat container to adjust when sidebar is open */
-  .chatContainer {
-    transition: margin-left 0.3s ease; /* Smooth transition for chat container */
-  }
-  
-  .chatContainer.shifted {
-    margin-left: 250px; /* Shift chat container to the right */
-  }
-  
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 250px;
+  height: 100%;
+  background-color: white;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+  transition: transform 0.3s ease-in-out; /* Smooth animation */
+  transform: translateX(-100%); /* Start off-screen */
+  z-index: 1000;
+  padding: 16px;
+}
+
+.menuBox {
+  display: flex;
+  flex-direction: column;
+  row-gap: 6px;
+  margin-top: 12px;
+}
+
+.visible {
+  transform: translateX(0); /* Slide into view */
+}
+
+.hidden {
+  transform: translateX(-100%); /* Slide out of view */
+}
