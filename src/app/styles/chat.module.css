@@ -62,3 +62,80 @@
     margin: auto 0;
     border-radius: 100%;
 }
+
+
+
+
+/* Chat Header */
+.chatHeaderBox {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+    transition: background 0.2s;
+  }
+  
+  .chatHeaderBox:hover {
+    background: #eaeaea;
+  }
+  
+  .chatNameBox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .chatNameInfoBox p {
+    margin: 0;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .searchIcon {
+    cursor: pointer;
+  }
+  
+  .resetDefaultButton {
+    background: none;
+    border: none;
+    padding: 0;
+  }
+  
+  /* Modal Styles */
+  .modalBackdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modalContent {
+    background: white;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-50px);
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  
+  .modalOpen {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  
+  .modalClose {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  

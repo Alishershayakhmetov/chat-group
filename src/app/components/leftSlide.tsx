@@ -1,25 +1,24 @@
-"use client";
-
+import React, { useState } from "react";
 import Image from "next/image";
-import styles from "../styles/leftSlide.module.css";
 import {
   Group as GroupIcon,
   Campaign as CampaignIcon,
+  Bookmark as BookmarkIcon,
   Settings as SettingsIcon,
   DarkMode as DarkModeIcon,
-  Bookmark as BookmarkIcon,
   Close as CloseIcon,
 } from "@mui/icons-material";
-
-import React, { useState, useEffect } from "react";
 import Switch from "@mui/material/Switch";
+import { SelectGroupChannel } from "./selectGroupChannel";
+import styles from "../styles/leftSlide.module.css";
 
 const label = { inputProps: { "aria-label": "Dark Mode Switch" } };
 
-const LeftSlideBox: React.FC<{ isVisible: boolean; onClose: () => void }> = ({
-  isVisible,
-  onClose,
-}) => {
+const LeftSlideBox: React.FC<{
+  isVisible: boolean;
+  onClose: () => void;
+  onSelect: (entity: string) => void;
+}> = ({ isVisible, onClose, onSelect }) => {
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const savedMode = localStorage.getItem("isDarkMode");
     return savedMode ? JSON.parse(savedMode) : false;
@@ -34,6 +33,7 @@ const LeftSlideBox: React.FC<{ isVisible: boolean; onClose: () => void }> = ({
       document.body.classList.remove("dark-mode");
     }
   };
+
   const data = {
     imgURL: "/favicon.png",
     userName: "User Name",
@@ -60,23 +60,21 @@ const LeftSlideBox: React.FC<{ isVisible: boolean; onClose: () => void }> = ({
         <MenuChoose
           icon={<GroupIcon sx={{ fontSize: 34, color: "black" }} />}
           text="Create new Group"
+          onClick={() => onSelect("group")}
         />
-
         <MenuChoose
           icon={<CampaignIcon sx={{ fontSize: 36, color: "black" }} />}
           text="Create new Channel"
+          onClick={() => onSelect("channel")}
         />
-
         <MenuChoose
           icon={<BookmarkIcon sx={{ fontSize: 32, color: "black" }} />}
           text="Saved Messages"
         />
-
         <MenuChoose
           icon={<SettingsIcon sx={{ fontSize: 32, color: "black" }} />}
           text="Settings"
         />
-
         <div className={styles.menuChooseBox}>
           <DarkModeIcon
             sx={{ fontSize: 32, color: isDarkMode ? "yellow" : "black" }}
@@ -93,12 +91,13 @@ const LeftSlideBox: React.FC<{ isVisible: boolean; onClose: () => void }> = ({
   );
 };
 
-const MenuChoose: React.FC<{ icon: React.ReactNode; text: string }> = ({
-  icon,
-  text,
-}) => {
+const MenuChoose: React.FC<{
+  icon: React.ReactNode;
+  text: string;
+  onClick?: () => void;
+}> = ({ icon, text, onClick }) => {
   return (
-    <div className={styles.menuChooseBox}>
+    <div className={styles.menuChooseBox} onClick={onClick}>
       {icon}
       <p>{text}</p>
     </div>
@@ -107,10 +106,17 @@ const MenuChoose: React.FC<{ icon: React.ReactNode; text: string }> = ({
 
 export const LeftSlide = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const [selectedEntity, setSelectedEntity] = useState<string | null>(null);
+  const [isExiting, setIsExiting] = useState(false);
+
+  const handleClose = () => {
+    setIsExiting(true);
+    setSelectedEntity(null);
+    setIsExiting(false);
+  };
 
   return (
-    <>
-      <LeftSlideBox isVisible={isVisible} onClose={() => setIsVisible(false)} />
+    <div>
       <Image
         src={"/menu-menu.svg"}
         alt={"menu"}
@@ -118,6 +124,24 @@ export const LeftSlide = () => {
         height={32}
         onClick={() => setIsVisible(true)}
       />
-    </>
+      {selectedEntity ? (
+        <div
+          className={`${styles.centeredContainer} ${
+            isExiting ? styles.fadeOut : styles.fadeIn
+          }`}
+        >
+          <SelectGroupChannel entity={selectedEntity} onClose={handleClose} />
+        </div>
+      ) : (
+        <LeftSlideBox
+          isVisible={isVisible}
+          onClose={() => setIsVisible(false)}
+          onSelect={(entity) => {
+            setSelectedEntity(entity);
+            setIsVisible(false);
+          }}
+        />
+      )}
+    </div>
   );
 };

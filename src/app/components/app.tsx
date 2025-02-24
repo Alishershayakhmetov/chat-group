@@ -29,28 +29,6 @@ export const App = () => {
   );
   const [roomData, setRoomData] = useState<roomData | null>(null);
   const [messages, setMessages] = useState<message[]>([]);
-  /*
-  // Listen for the "chats" event and update the state
-  socket.on("chats", (chatsList) => {
-    setChats(chatsList);
-  });
-
-  // Listen for the "searchResults" event to update the search results
-  socket.on("searchResult", (results) => {
-    setSearchResults(results);
-  });
-
-  socket.on("enterChat", (data) => {
-    console.log("roomData: ", data);
-    setRoomData(data.roomData);
-    setMessages(data.messages);
-  });
-
-  socket.on("newMessage", (data) => {
-    console.log(data);
-    setMessages((prevMessages) => [...prevMessages, data]);
-  });
-  */
 
   useEffect(() => {
     const handleChats = (chatsList: chatLastMessageData[]) =>

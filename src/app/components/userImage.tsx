@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 
-interface UserImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
-  src?: string; // Optional to allow fallback
+interface UserImageProps
+  extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src"> {
+  src?: string | null; // Redefine `src` to allow `null`
   alt?: string;
 }
 

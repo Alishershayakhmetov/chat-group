@@ -81,3 +81,11 @@ export interface roomDataWithMessages {
 export function isObjectSearchedChats (object: any): object is searchedChats {
   return 'type' in object;
 }
+
+export interface createGroupList {
+  id: string, 
+  name: string | null, 
+  lastName: string | null, 
+  imgURL: string | null, 
+  status: string | null
+}
