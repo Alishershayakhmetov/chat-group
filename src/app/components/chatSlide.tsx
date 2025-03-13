@@ -57,10 +57,14 @@ export const ChatSlide = ({
       <div className={styles.infoBox}>
         <div className={styles.info}>
           <p>{data.chatName}</p>
-          <p>{FormatDate(data.lastMessageTime)}</p>
+          <p style={{ width: "50px" }}>{FormatDate(data.lastMessageTime)}</p>
         </div>
         <div className={styles.info}>
-          <p>{`${data.messageUserName}: ${data.messageText}`}</p>
+          <p>
+            {data.messageUserName && data.messageText
+              ? `${data.messageUserName}: ${data.messageText}`
+              : ""}
+          </p>
           <p>
             <span>{data.numberOfUnreadMessages}</span>
           </p>

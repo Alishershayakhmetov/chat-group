@@ -5,6 +5,7 @@ import { Close } from "@mui/icons-material";
 import { useSocketContext } from "../contexts/socketContext";
 import { createGroupList } from "../interfaces/interfaces";
 import UserImage from "./userImage";
+import axios from "axios";
 
 export const SelectGroupChannel: React.FC<{
   entity: string;
@@ -12,6 +13,7 @@ export const SelectGroupChannel: React.FC<{
 }> = ({ entity, onClose }) => {
   const socket = useSocketContext();
   const [title, setTitle] = useState<string>("");
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("/picture-697.svg");
   const [peopleList, setPeopleList] = useState<createGroupList[]>([]);
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
@@ -23,20 +25,22 @@ export const SelectGroupChannel: React.FC<{
 
   useEffect(() => {
     // Fetch the user list for the group
-    socket.emit("createNewGroup");
-    socket.on(
-      "createNewGroup",
-      (result: { success: boolean; users: createGroupList[] }) => {
-        if (result.success) {
-          setPeopleList(result.users);
+    if (entity == "group") {
+      socket.emit("openCreateNewGroup");
+      socket.on(
+        "openCreateNewGroup",
+        (result: { success: boolean; users: createGroupList[] }) => {
+          if (result.success) {
+            setPeopleList(result.users);
+          }
         }
-      }
-    );
+      );
 
-    // Cleanup listener on unmount
-    return () => {
-      socket.off("createNewGroup");
-    };
+      // Cleanup listener on unmount
+      return () => {
+        socket.off("openCreateNewGroup");
+      };
+    }
   }, [socket]);
 
   const handleUserSelection = (userId: string) => {
@@ -50,11 +54,12 @@ export const SelectGroupChannel: React.FC<{
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
+      setSelectedImage(file);
       setImagePreview(URL.createObjectURL(file));
     }
   };
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     if (!title.trim()) {
       setSnackbar({
         open: true,
@@ -73,12 +78,42 @@ export const SelectGroupChannel: React.FC<{
       return;
     }
 
+    let uploadedImage;
+    if (imagePreview && imagePreview != "/picture-697.svg") {
+      const parts = selectedImage!.name.split(".");
+      const extension = [parts.length > 1 ? parts.pop() : ""];
+
+      // Request signed upload URLs for files
+      const result = await axios.post("http://localhost:3005/upload", {
+        extension,
+      });
+
+      const urls: { url: string; key: string }[] = result.data.urls;
+
+      const fileUrl = urls[0].url;
+      const qw = await axios.put(fileUrl, selectedImage, {
+        headers: {
+          "Content-Type": selectedImage!.type,
+        },
+      });
+      console.log("The image uploaded successfully.");
+
+      uploadedImage = {
+        key: urls[0].key,
+        name: selectedImage!.name,
+        url: urls[0].url.split("?")[0],
+        saveAsMedia: false,
+      };
+    }
+
     if (entity === "group") {
-      // Send the selected users and group title to the backend
-      socket.emit("createGroup", { title, users: selectedUsers });
+      socket.emit("createNewGroup", {
+        title,
+        uploadedImage,
+        users: selectedUsers,
+      });
     } else {
-      // Handle channel creation logic here
-      socket.emit("createChannel", { title });
+      socket.emit("createNewChannel", { title, uploadedImage });
     }
 
     setSnackbar({
@@ -101,7 +136,7 @@ export const SelectGroupChannel: React.FC<{
       <div className={styles.modalContent}>
         <header>
           <Close
-            sx={{ fontSize: 40, color: "black" }}
+            sx={{ fontSize: 40, color: "var(--color-text-default)" }}
             className={styles.closeButton}
             onClick={onClose}
           />
@@ -160,7 +195,12 @@ export const SelectGroupChannel: React.FC<{
         </div>
         {entity === "group" ? (
           <div className={styles.peopleListContainer}>
-            <h3 style={{ marginBottom: "12px" }}>
+            <h3
+              style={{
+                marginBottom: "12px",
+                color: "var(--color-text-default)",
+              }}
+            >
               Select People for the Group
             </h3>
             <PeopleList
@@ -218,7 +258,9 @@ const PeopleList = ({
 const ChannelParamList = () => {
   return (
     <div className={styles.channelParamList}>
-      <h3>Set Channel Parameters</h3>
+      <h3 style={{ color: "var(--color-text-default)" }}>
+        Set Channel Parameters
+      </h3>
       <div className={styles.paramField}>
         <label htmlFor="topic">Channel Topic:</label>
         <input

@@ -3,6 +3,8 @@ import styles from "../styles/message.module.css";
 import { attachment, message } from "../interfaces/interfaces";
 import { extractTime } from "../utils/formatDate";
 import UserImage from "./userImage";
+import { Card, CardContent, Typography } from "@mui/material";
+import { formatFileSize } from "../utils/formatFileSize";
 
 export const Message = ({ data }: { data: message }) => {
   console.log(data);
@@ -61,11 +63,28 @@ const DownloadMedia = ({ attachments }: { attachments: attachment[] }) => {
       {attachments
         .filter((attachment) => attachment.saveAsMedia)
         .map((attachment) => (
-          <div key={attachment.fileURL} className={styles.downloadItem}>
-            <button onClick={() => downloadMedia(attachment.fileURL!)}>
-              Download {attachment.fileName}
-            </button>
-          </div>
+          <Card
+            key={attachment.fileURL}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              padding: 1,
+              cursor: "pointer",
+            }}
+            onClick={() => downloadMedia(attachment.fileURL!)}
+          >
+            <img src="/file-82.svg" width={32} height={32} />
+            <CardContent
+              sx={{ flex: 1, padding: "0", paddingBottom: "0 !important" }}
+            >
+              <Typography variant="body1" fontWeight="bold">
+                {attachment.fileName}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {formatFileSize(attachment.fileSize)}
+              </Typography>
+            </CardContent>
+          </Card>
         ))}
     </div>
   );

@@ -1,4 +1,5 @@
-export function FormatDate(dateString: string | Date, locale = 'default') {
+export function FormatDate(dateString: string | undefined, locale = 'default') {
+    if (dateString === undefined) return undefined
     const date = new Date(dateString); // Convert the string to a Date object
     const now = new Date();
 

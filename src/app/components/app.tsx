@@ -18,6 +18,7 @@ import {
 import { useSocketContext } from "../contexts/socketContext";
 import { ChatForm } from "./chatForm";
 import { v4 as uuid } from "uuid";
+import useDarkMode from "../hooks/useDarkMode";
 
 export const App = () => {
   const socket = useSocketContext();
@@ -29,6 +30,7 @@ export const App = () => {
   );
   const [roomData, setRoomData] = useState<roomData | null>(null);
   const [messages, setMessages] = useState<message[]>([]);
+  const [isDarkMode, setIsDarkMode] = useDarkMode();
 
   useEffect(() => {
     const handleChats = (chatsList: chatLastMessageData[]) =>
@@ -65,11 +67,21 @@ export const App = () => {
       });
     };
 
+    const handleCreateNewGroup = (newGroup: chatLastMessageData) => {
+      setChats((prevChats) => [newGroup, ...prevChats]);
+    };
+
+    const handleCreateNewChannel = (newChannel: chatLastMessageData) => {
+      setChats((prevChats) => [newChannel, ...prevChats]);
+    };
+
     // Register event listeners
     socket.on("chats", handleChats);
     socket.on("searchResult", handleSearchResults);
     socket.on("enterChat", handleEnterChat);
     socket.on("newMessage", handleNewMessage);
+    socket.on("createNewGroup", handleCreateNewGroup);
+    socket.on("createNewChannel", handleCreateNewChannel);
 
     // Cleanup event listeners on unmount
     return () => {
@@ -77,8 +89,19 @@ export const App = () => {
       socket.off("searchResult", handleSearchResults);
       socket.off("enterChat", handleEnterChat);
       socket.off("newMessage", handleNewMessage);
+      socket.off("createNewGroup", handleCreateNewGroup);
+      socket.off("createNewChannel", handleCreateNewChannel);
     };
   }, [socket]); // Dependency array ensures this runs only once
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.body.classList.add("dark-mode");
+    } else {
+      document.body.classList.remove("dark-mode");
+    }
+    localStorage.setItem("isDarkMode", JSON.stringify(isDarkMode));
+  }, [isDarkMode]);
 
   const handleAddTempMessage = ({
     text,

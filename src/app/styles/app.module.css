@@ -1,21 +1,21 @@
 .main {
     display: flex;
     flex-direction: row;
-    height: 100vh; /* Full height of the viewport */
+    height: 100vh;
 }
   
 .leftSlide {
     width: 30%;
-    background-color: #90b9c5;
+    background-color: var(--bg-color-chat-list-box);
     display: flex;
     flex-direction: column;
-    height: 100vh; /* Ensures the left section takes full height */
+    height: 100vh;
 }
 
 .rightSlide {
     width: 70%;
     background-image: url("/background-chat-612x612.jpg");
-    position: relative; /* Needed for absolute positioning of pseudo-element */
+    position: relative;
 }
 
 .rightSlide::before {
@@ -25,8 +25,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(186, 186, 186, 0.4); /* Semi-transparent black overlay */
-    z-index: 1; /* Ensures the overlay is above the background but below other content */
+    background-color: var(--bg-color-chat-shadow);
+    z-index: 1;
 }
   
 .listHeader {
@@ -35,18 +35,18 @@
     padding: 15px 20px;
     column-gap: 20px;
     position: sticky;
-    top: 0; /* Sticks the header to the top */
-    background-color: inherit; /* Inherits the background color from parent */
-    z-index: 10; /* Ensures header stays on top */
+    top: 0;
+    background-color: inherit;
+    z-index: 10;
 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow at the bottom of the header */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
   
 .contactsList {
     display: flex;
     flex-direction: column;
-    overflow-y: auto; /* Creates scroll only if content exceeds available space */
-    flex-grow: 1; /* Ensures the contactsList takes up the remaining space */
+    overflow-y: auto;
+    flex-grow: 1;
     padding-right: 10px;
 
     margin-left: 10px;
@@ -54,17 +54,17 @@
 }
 
 .contactsList::-webkit-scrollbar {
-    width: 8px; /* Width of the vertical scrollbar */
+    width: 8px;
 }
 .contactsList::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.3); /* Thumb color */
-    border-radius: 10px; /* Rounded corners on the scrollbar handle */
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
 }
 .contactsList::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(0, 0, 0, 0.5); /* Darker on hover */
+    background-color: rgba(0, 0, 0, 0.5);
 }
 .contactsList::-webkit-scrollbar-track {
-    background: transparent; /* Track color */
+    background: transparent;
 }
 
 .contentBox {

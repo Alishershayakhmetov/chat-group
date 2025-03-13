@@ -11,6 +11,7 @@ import {
 import Switch from "@mui/material/Switch";
 import { SelectGroupChannel } from "./selectGroupChannel";
 import styles from "../styles/leftSlide.module.css";
+import useDarkMode from "../hooks/useDarkMode";
 
 const label = { inputProps: { "aria-label": "Dark Mode Switch" } };
 
@@ -19,10 +20,7 @@ const LeftSlideBox: React.FC<{
   onClose: () => void;
   onSelect: (entity: string) => void;
 }> = ({ isVisible, onClose, onSelect }) => {
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    const savedMode = localStorage.getItem("isDarkMode");
-    return savedMode ? JSON.parse(savedMode) : false;
-  });
+  const [isDarkMode, setIsDarkMode] = useDarkMode();
 
   const handleDarkModeToggle = () => {
     setIsDarkMode(!isDarkMode);
@@ -46,7 +44,11 @@ const LeftSlideBox: React.FC<{
       }`}
     >
       <header className={styles.slideHeader}>
-        <CloseIcon sx={{ fontSize: 40, color: "black" }} onClick={onClose} />
+        <CloseIcon
+          className="SVGColorController"
+          sx={{ fontSize: 40 }}
+          onClick={onClose}
+        />
         <Image
           src={data.imgURL}
           alt="Profile Image"
@@ -58,21 +60,38 @@ const LeftSlideBox: React.FC<{
       </header>
       <div className={styles.menuBox}>
         <MenuChoose
-          icon={<GroupIcon sx={{ fontSize: 34, color: "black" }} />}
+          icon={
+            <GroupIcon className="SVGColorController" sx={{ fontSize: 34 }} />
+          }
           text="Create new Group"
           onClick={() => onSelect("group")}
         />
         <MenuChoose
-          icon={<CampaignIcon sx={{ fontSize: 36, color: "black" }} />}
+          icon={
+            <CampaignIcon
+              className="SVGColorController"
+              sx={{ fontSize: 36 }}
+            />
+          }
           text="Create new Channel"
           onClick={() => onSelect("channel")}
         />
         <MenuChoose
-          icon={<BookmarkIcon sx={{ fontSize: 32, color: "black" }} />}
+          icon={
+            <BookmarkIcon
+              className="SVGColorController"
+              sx={{ fontSize: 32 }}
+            />
+          }
           text="Saved Messages"
         />
         <MenuChoose
-          icon={<SettingsIcon sx={{ fontSize: 32, color: "black" }} />}
+          icon={
+            <SettingsIcon
+              className="SVGColorController"
+              sx={{ fontSize: 32 }}
+            />
+          }
           text="Settings"
         />
         <div className={styles.menuChooseBox}>

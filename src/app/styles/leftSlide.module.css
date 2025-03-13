@@ -10,6 +10,8 @@
   align-items: center;
   text-align: center;
   gap: 8px;
+
+  background-color: var(--background);
 }
 
 .slideHeader {
@@ -30,6 +32,8 @@
   transform: translateX(-100%); /* Start off-screen */
   z-index: 1000;
   padding: 16px;
+
+  background-color: var(--background);
 }
 
 .menuBox {
@@ -189,7 +193,7 @@
 }
 
 .channelParamList {
-  background-color: #f9f9f9;
+  background-color: var(--background); /* #f9f9f9 */
   border-radius: 8px;
   padding: 16px;
 }
@@ -226,7 +230,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: white;
+  background: var(--background);
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);

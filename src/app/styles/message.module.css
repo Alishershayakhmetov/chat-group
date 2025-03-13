@@ -14,9 +14,8 @@
 .rightBox {
     display: flex;
     flex-direction: row;
-
     
-    background-color: white;
+    background-color: var(--bg-color-text-default);
     margin: 2px 0;
     padding: 8px 12px;
     border-radius: 10px;

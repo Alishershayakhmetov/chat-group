@@ -9,10 +9,10 @@ export interface chatLastMessageData {
   roomId: string
   chatImgURL: string,
   chatName: string,
-  lastMessageTime: string,
-  messageUserName: string,
-  messageText: string,
-  isMessageForwarded: boolean,
+  lastMessageTime?: string,
+  messageUserName?: string,
+  messageText?: string,
+  isMessageForwarded?: boolean,
   numberOfUnreadMessages?: number,
 }
 
@@ -61,6 +61,7 @@ export interface attachment {
   fileURL: string,
   fileName: string,
   saveAsMedia?: boolean
+  fileSize?: number
 }
 
 export interface roomData {
