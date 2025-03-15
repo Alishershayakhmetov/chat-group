@@ -38,6 +38,7 @@ export const MessageInput = ({
       fileName: string;
       saveAsMedia: boolean;
       fileURL: string;
+      fileSize: number;
     }[];
   }) => string;
 }) => {
@@ -219,6 +220,7 @@ export const MessageInput = ({
       fileName: file.file.name,
       saveAsMedia: file.saveAsMedia,
       fileURL: URL.createObjectURL(file.file),
+      fileSize: file.file.size,
     }));
     const tempId = addTemp({ text, attachments });
 
@@ -258,6 +260,7 @@ export const MessageInput = ({
           name: files[index].file.name,
           url: url.url.split("?")[0], // Remove query parameters from URL
           saveAsMedia: files[index].saveAsMedia,
+          fileSize: files[index].file.size,
         })
       );
 
@@ -291,7 +294,10 @@ export const MessageInput = ({
       <div className={styles.leftBox}>
         <div>
           {/* emoji selection container */}
-          <IconButton onClick={handleEmojiClick}>
+          <IconButton
+            onClick={handleEmojiClick}
+            sx={{ color: "var(--color-text-default)" }}
+          >
             <EmojiEmotionsIcon />
           </IconButton>
         </div>
@@ -309,6 +315,18 @@ export const MessageInput = ({
               fullWidth
               value={message}
               onChange={(e) => handleSetText(e.target.value)}
+              sx={{
+                color: "var(--color-text-default)",
+                "&::before": {
+                  borderBottom: "1px solid white !important", // Default underline color
+                },
+                "&::after": {
+                  borderBottom: "2px solid hsl(194, 31%, 27%) !important", // focused underline color
+                },
+                "&:hover:not(.Mui-disabled):before": {
+                  borderBottom: "1px solid white !important", // Hover effect
+                },
+              }}
             />
           </Box>
         </div>
@@ -317,11 +335,14 @@ export const MessageInput = ({
             type="file"
             id="file-upload"
             multiple
-            style={{ display: "none" }} // Hide the default file input
+            style={{ display: "none", color: "var(--color-text-default)" }} // Hide the default file input
             onChange={handleFileChange}
           />
           <label htmlFor="file-upload">
-            <IconButton component="span">
+            <IconButton
+              component="span"
+              sx={{ color: "var(--color-text-default)" }}
+            >
               <AttachFileIcon />
             </IconButton>
           </label>
@@ -334,11 +355,16 @@ export const MessageInput = ({
             onClick={handleSend}
             disabled={!message && files.length == 0}
             className={styles.fade}
+            sx={{ color: "var(--color-text-default)" }}
           >
             <SendIcon />
           </IconButton>
         ) : (
-          <IconButton onClick={handleVoiceRecord} className={styles.fade}>
+          <IconButton
+            onClick={handleVoiceRecord}
+            className={styles.fade}
+            sx={{ color: "var(--color-text-default)" }}
+          >
             <MicIcon />
           </IconButton>
         )}

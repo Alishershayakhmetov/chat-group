@@ -112,6 +112,7 @@ export const App = () => {
       fileName: string;
       saveAsMedia: boolean;
       fileURL: string;
+      fileSize: number;
     }[];
   }) => {
     const tempId = uuid();

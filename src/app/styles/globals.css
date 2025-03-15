@@ -1,11 +1,15 @@
 :root {
   --background: #ffffff;
   --foreground: hsl(194, 80%, 10%);
+  --foreground-shadow: hsl(0, 0%, 80%);
 
   --color-text-default: #171717;
   --bg-color-text-default: #ffffff;
   --bg-color-chat-list-box: hsl(194, 31%, 67%);
+  --bg-color-chat-list-box-hover: hsl(209.61, 47.24%, 61.96%);
   --bg-color-chat-shadow: rgba(186, 186, 186, 0.4);
+
+  --bg-color-chat-header: hsl(0, 0%, 91.76%);
 }
 
 body.dark-mode {
@@ -15,7 +19,10 @@ body.dark-mode {
   --color-text-default: #ffffff;
   --bg-color-text-default: #171717;
   --bg-color-chat-list-box: hsl(194, 31%, 37%);
+  --bg-color-chat-list-box-hover: hsl(209.61, 47.24%, 31.96%);
   --bg-color-chat-shadow: rgba(56, 56, 56, 0.4);
+
+  --bg-color-chat-header: hsl(0, 0%, 16.76%);
 }
 
 .SVGColorController {

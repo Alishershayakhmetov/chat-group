@@ -5,6 +5,7 @@ import { extractTime } from "../utils/formatDate";
 import UserImage from "./userImage";
 import { Card, CardContent, Typography } from "@mui/material";
 import { formatFileSize } from "../utils/formatFileSize";
+import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 
 export const Message = ({ data }: { data: message }) => {
   console.log(data);
@@ -20,19 +21,22 @@ export const Message = ({ data }: { data: message }) => {
       </div>
       <div className={styles.rightBox}>
         <div className={styles.contentBox}>
-          <span>{data.userName}</span>
+          <div className={`${styles.relative} ${styles.messageHeader}`}>
+            <span>{data.userName}</span>
+            <span className={styles.time}>{extractTime(data.updatedAt)}</span>
+          </div>
 
           {/* Render Media */}
           <RenderMedia attachments={data.attachments} />
 
-          {/* Render Text */}
-          <pre>{data.text}</pre>
+          {/* <pre>{data.text}</pre> */}
+
+          <Typography variant="body2" gutterBottom>
+            {data.text}
+          </Typography>
 
           {/* Download Media */}
           <DownloadMedia attachments={data.attachments} />
-        </div>
-        <div className={styles.relative}>
-          <span className={styles.time}>{extractTime(data.updatedAt)}</span>
         </div>
       </div>
     </div>
@@ -70,17 +74,27 @@ const DownloadMedia = ({ attachments }: { attachments: attachment[] }) => {
               alignItems: "center",
               padding: 1,
               cursor: "pointer",
+              backgroundColor: "var(--bg-color-text-default)",
             }}
             onClick={() => downloadMedia(attachment.fileURL!)}
           >
-            <img src="/file-82.svg" width={32} height={32} />
+            <InsertDriveFileIcon
+              sx={{
+                fontSize: 34,
+                color: "var(--color-text-default)",
+              }}
+            />
             <CardContent
               sx={{ flex: 1, padding: "0", paddingBottom: "0 !important" }}
             >
-              <Typography variant="body1" fontWeight="bold">
+              <Typography
+                variant="body1"
+                fontWeight="bold"
+                sx={{ color: "var(--color-text-default)" }}
+              >
                 {attachment.fileName}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" color="var(--color-text-default)">
                 {formatFileSize(attachment.fileSize)}
               </Typography>
             </CardContent>

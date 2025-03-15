@@ -7,7 +7,7 @@
     justify-content: space-between;
 }
 .slide:hover {
-    background-color: #2b5278;
+    background-color: var(--bg-color-chat-list-box-hover);
 }
 .image {
     width: 50px;
@@ -39,11 +39,11 @@
     margin-right: 5px;
 }
 .chatHeaderBox {
-    background-color: #FFF;
+    background-color: var(--bg-color-text-default);
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    
+    cursor: pointer;
     padding: 4px 24px;
 }
 .chatNameBox {
@@ -58,11 +58,6 @@
 .resetDefaultButton {
     all: unset;
 }
-.searchIcon {
-    margin: auto 0;
-    border-radius: 100%;
-}
-
 
 
 
@@ -72,13 +67,11 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-    background: #f5f5f5;
-    border-bottom: 1px solid #ddd;
     transition: background 0.2s;
   }
   
   .chatHeaderBox:hover {
-    background: #eaeaea;
+    background: var(--bg-color-chat-header);
   }
   
   .chatNameBox {

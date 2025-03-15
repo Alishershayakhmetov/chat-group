@@ -19,6 +19,10 @@
     margin: 2px 0;
     padding: 8px 12px;
     border-radius: 10px;
+    transition: background 0.2s;
+}
+.rightBox:hover {
+    background-color: var(--bg-color-chat-header);
 }
 .relative {
     position: relative;
@@ -26,9 +30,8 @@
 .time {
     color: #969696;
     font-size: 12px;
-    /*
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    */
+}
+.messageHeader {
+    display: flex;
+    justify-content: space-between;
 }

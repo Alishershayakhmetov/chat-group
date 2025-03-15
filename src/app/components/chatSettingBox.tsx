@@ -15,9 +15,25 @@ export default function ChatSettingBox({ isOpen, onClose, chatData }: any) {
         <Box className={styles.header}>
           <Typography variant="h6">{chatData.title || "Chat Info"}</Typography>
           <Box className={styles.actions}>
-            <Image src={Dots} width={24} height={24} alt="settings" />
+            <svg
+              className="svg-icon"
+              style={{
+                width: "1.5em",
+                height: "1.5em",
+                verticalAlign: "middle",
+                fill: "var(--color-text-default)",
+                overflow: "hidden",
+              }}
+              viewBox="0 0 1024 1024"
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M512 512m-116.949333 0a116.949333 116.949333 0 1 0 233.898666 0 116.949333 116.949333 0 1 0-233.898666 0Z" />
+              <path d="M512 159.616m-116.949333 0a116.949333 116.949333 0 1 0 233.898666 0 116.949333 116.949333 0 1 0-233.898666 0Z" />
+              <path d="M512 864.384m-116.949333 0a116.949333 116.949333 0 1 0 233.898666 0 116.949333 116.949333 0 1 0-233.898666 0Z" />
+            </svg>
             <CloseIcon
-              sx={{ fontSize: 30, color: "black" }}
+              sx={{ fontSize: 30, color: "var(--color-text-default)" }}
               onClick={onClose}
             />
           </Box>
@@ -36,7 +52,7 @@ export default function ChatSettingBox({ isOpen, onClose, chatData }: any) {
             <Typography variant="subtitle1">
               {chatData.name || "User/Group Name"}
             </Typography>
-            <Typography variant="body2" color="textSecondary">
+            <Typography variant="body2" color="var(--color-text-default)">
               {chatData.status || "Online"}
             </Typography>
           </Box>

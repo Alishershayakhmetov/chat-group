@@ -8,6 +8,7 @@ import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import {
   Checkbox,
   IconButton,
+  Input,
   List,
   ListItem,
   ListItemButton,
@@ -16,6 +17,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { formatFileSize } from "../utils/formatFileSize";
 
 const style = {
   position: "absolute",
@@ -24,6 +26,7 @@ const style = {
   transform: "translate(-50%, -50%)",
   minWidth: 400,
   bgcolor: "background.paper",
+  backgroundColor: "var(--bg-color-text-default)",
   borderRadius: "8px",
   boxShadow: 24,
   p: 4,
@@ -67,10 +70,17 @@ export default function SelectFiles({
               alignItems: "center",
             }}
           >
-            <Typography id="modal-title" variant="h6">
+            <Typography
+              id="modal-title"
+              variant="h6"
+              color="var(--color-text-default)"
+            >
               Select Files
             </Typography>
-            <IconButton onClick={onClose}>
+            <IconButton
+              onClick={onClose}
+              sx={{ color: "var(--color-text-default)" }}
+            >
               <CloseIcon />
             </IconButton>
           </div>
@@ -84,7 +94,9 @@ export default function SelectFiles({
               <ListItem key={index} disablePadding>
                 <ListItemButton>
                   <ListItemIcon>
-                    <InsertDriveFileIcon />
+                    <InsertDriveFileIcon
+                      sx={{ color: "var(--color-text-default)" }}
+                    />
                   </ListItemIcon>
                   <div style={{ flexGrow: 1 }}>
                     <ListItemText
@@ -95,7 +107,7 @@ export default function SelectFiles({
                       }
                       secondary={
                         <Typography variant="body2" color="gray">
-                          {`${(file.file.size / 1024).toFixed(2)} KB`}
+                          {formatFileSize(file.file.size)}
                         </Typography>
                       }
                     />
@@ -114,7 +126,7 @@ export default function SelectFiles({
                     </div>
                   ) : null}
                   <IconButton onClick={() => onDeleteFile(index)}>
-                    <DeleteIcon />
+                    <DeleteIcon sx={{ color: "var(--color-text-default)" }} />
                   </IconButton>
                 </ListItemButton>
               </ListItem>
@@ -137,7 +149,29 @@ export default function SelectFiles({
             value={text}
             onChange={(e) => onTextChange(e.target.value)}
             margin="normal"
+            sx={{
+              color: "var(--color-text-default) !important",
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "var(--foreground)",
+                  transition: "border-color 0.2s ease-in-out",
+                },
+                "&:hover fieldset": {
+                  borderColor: "var(--foreground-shadow) !important",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: (theme) =>
+                    `${theme.palette.primary.main} !important`,
+                },
+                "&.Mui-focused:hover fieldset": {
+                  // Prevent hover effect when focused
+                  borderColor: (theme) =>
+                    `${theme.palette.primary.main} !important`,
+                },
+              },
+            }}
           />
+
           <div
             style={{
               display: "flex",

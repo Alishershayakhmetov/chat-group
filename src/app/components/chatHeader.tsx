@@ -4,6 +4,8 @@ import styles from "../styles/chat.module.css";
 import { roomData } from "../interfaces/interfaces";
 import UserImage from "./userImage";
 import ChatSettingBox from "./chatSettingBox";
+import { Typography } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 
 export const ChatHeader = ({ data }: { data: roomData | undefined }) => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -20,26 +22,36 @@ export const ChatHeader = ({ data }: { data: roomData | undefined }) => {
 
   return (
     <>
-      <div
-        className={styles.chatHeaderBox}
-        onClick={handleOpenSettings}
-        style={{ cursor: "pointer" }}
-      >
+      <div className={styles.chatHeaderBox} onClick={handleOpenSettings}>
         <div className={styles.chatNameBox}>
           <UserImage className={styles.image} src={data && data.imgURL} />
           <div className={styles.chatNameInfoBox}>
-            <p>{data && data.roomName}</p>
-            <p>{chatStatus}</p>
+            <Typography
+              variant="subtitle2"
+              gutterBottom
+              sx={{ color: "var(--color-text-default)" }}
+            >
+              {data && data.roomName}
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              gutterBottom
+              sx={{ color: "var(--color-text-default)" }}
+            >
+              {chatStatus}
+            </Typography>
           </div>
         </div>
         <div style={{ alignSelf: "center" }}>
           <button className={styles.resetDefaultButton}>
-            <Image
-              src={"/icon-search-2.svg"}
-              alt="Chat Image"
-              width={24}
-              height={24}
-              className={styles.searchIcon}
+            <SearchIcon
+              sx={{
+                margin: "auto 0",
+                borderRadius: "100%",
+                color: "var(--color-text-default)",
+                width: "32px",
+                height: "32px",
+              }}
             />
           </button>
         </div>

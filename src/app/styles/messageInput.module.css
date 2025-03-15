@@ -4,7 +4,7 @@
     flex-direction: row;
 
     position: absolute;
-    bottom: -68px;
+    bottom: -58px;
     width: calc(100% - 2 * 15px);
     z-index: 3;
 }
@@ -16,6 +16,7 @@
     align-items: center; /* Center icons vertically */
     padding: 10px;
     flex: 1;
+    background-color: var(--bg-color-text-default);
 }
 .leftBox > :nth-child(2) {
     flex: 1;
@@ -24,7 +25,7 @@
     margin-right: 8px; /* Add space between icons */
 }
 .rightBox {
-    background-color: white;
+    background-color: var(--bg-color-text-default);
     border-radius: 50%;
     align-items: center;
 

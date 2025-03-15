@@ -26,6 +26,7 @@ export const ChatForm = ({
       fileName: string;
       saveAsMedia: boolean;
       fileURL: string;
+      fileSize: number;
     }[];
   }) => string;
 }) => {
