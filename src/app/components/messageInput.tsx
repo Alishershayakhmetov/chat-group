@@ -2,10 +2,10 @@
 import styles from "../styles/messageInput.module.css";
 import Box from "@mui/material/Box";
 import Input from "@mui/material/Input";
-import { IconButton } from "@mui/material";
+import { IconButton, Typography } from "@mui/material";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import MicIcon from "@mui/icons-material/Mic"; // Mic icon for voice
 import SendIcon from "@mui/icons-material/Send"; // Send icon
 import { useSocketContext } from "../contexts/socketContext";
@@ -13,6 +13,8 @@ import axios from "axios";
 import { message } from "../interfaces/interfaces";
 import { v4 as uuid } from "uuid";
 import SelectFiles from "./selectFiles";
+
+import { Close as CloseIcon, Reply } from "@mui/icons-material";
 
 interface FileAttachmentProps {
   onFileSelect: (file: File) => void;
@@ -27,6 +29,15 @@ const ariaLabel = { "aria-label": "Type message box" };
 export const MessageInput = ({
   roomId,
   addTemp,
+  messageText,
+  setMessageText,
+  isMessageEdit,
+  targetMessageId,
+  setIsMessageEdit,
+  setTargetMessageId,
+  isMessageReply,
+  setIsMessageReply,
+  messages,
 }: {
   roomId: string;
   addTemp: ({
@@ -41,9 +52,17 @@ export const MessageInput = ({
       fileSize: number;
     }[];
   }) => string;
+  messageText: string;
+  setMessageText: Dispatch<SetStateAction<string>>;
+  isMessageEdit: boolean;
+  targetMessageId: string | undefined;
+  setIsMessageEdit: Dispatch<SetStateAction<boolean>>;
+  setTargetMessageId: Dispatch<SetStateAction<string | undefined>>;
+  isMessageReply: boolean;
+  setIsMessageReply: Dispatch<SetStateAction<boolean>>;
+  messages: message[];
 }) => {
-  console.log(`roomId roomId roomId ${roomId}`);
-  const [message, setMessage] = useState("");
+  // const [message, setMessage] = useState("");
   const [files, setFiles] = useState<{ file: File; saveAsMedia: boolean }[]>(
     []
   );
@@ -51,7 +70,7 @@ export const MessageInput = ({
   const socket = useSocketContext();
 
   const handleSetText = (text: string) => {
-    setMessage(text);
+    setMessageText(text);
   };
   const handleCloseWindow = () => {
     setFiles([]);
@@ -100,122 +119,29 @@ export const MessageInput = ({
   const handleEmojiClick = () => {
     // Placeholder for actual emoji picker or you can open an emoji picker library
     const emoji = "😊"; // Example emoji
-    setMessage(message + emoji); // Send the emoji to parent component
+    setMessageText(messageText + emoji); // Send the emoji to parent component
   };
 
-  /*
   const handleSend = async () => {
-    if (!message.trim() && files.length === 0) {
+    if (!messageText.trim() && files.length === 0) {
       alert("Cannot send an empty message.");
       return;
     }
 
-    const processedFiles = await Promise.all(
-      files.map(
-        (file) =>
-          new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => {
-              resolve({
-                name: file.name,
-                type: file.type,
-                size: file.size,
-                content: reader.result, // Base64 encoded file content
-              });
-            };
-            reader.onerror = reject;
-            reader.readAsArrayBuffer(file);
-          })
-      )
-    );
+    const text = messageText.trim();
 
-    // Construct payload
-    const payload = {
-      roomId,
-      text: message.trim(),
-      attachments: processedFiles, // This will be an array of File objects
-    };
-
-    socket.emit("sendMessage", payload);
-    console.log("Message sent:", payload);
-
-    // Clear message and files
-    setMessage("");
-    setFiles([]);
-  };
-  */
-
-  /*
-  const handleSend = async () => {
-    files.map((file) => file.file.name.split(".").pop());
-    const result = await axios.post("http://localhost:3005/upload", {
-      extensions: files.map((file) => file.file.name.split(".").pop()),
-    });
-    const urls = result.data.urls;
-    console.log(urls);
-    urls.map((url: string, index: number) => {
-      const put = axios.put(url, files[index]);
-      const fileUrl = url.split("?")[0];
-      console.log(fileUrl);
-    });
-    // when all files are loaded, create new records about files in db
-  };
-  */
-  /*
-  const handleSend = async () => {
-    try {
-      // Extract file extensions
-      const extensions = files.map((file) => {
-        const parts = file.file.name.split(".");
-        return parts.length > 1 ? parts.pop() : ""; // Handle files without extensions
+    if (isMessageEdit && targetMessageId) {
+      console.log("message editing");
+      socket.emit("editMessage", {
+        messageId: targetMessageId,
+        editedText: messageText,
       });
-
-      // Get signed upload URLs
-      const result = await axios.post("http://localhost:3005/upload", {
-        extensions,
-      });
-
-      const urls: { url: string; key: string }[] = result.data.urls;
-      const urlsWithMetadata = urls.map((url, index) => ({
-        url: url.url,
-        key: url.key,
-        name: files[index].file.name,
-        isNamePersist: files[index].isNamePersist,
-      }));
-
-      // Upload files to the provided URLs
-      const uploadPromises = urlsWithMetadata.map((url, index: number) => {
-        const fileUrl = url.url.split("?")[0];
-        console.log(`Uploading file to: ${fileUrl}`);
-        return axios
-          .put(url.url, files[index])
-          .then(() => ({ ...url, url: fileUrl })); // Resolve with the file URL
-      });
-
-      // Wait for all uploads to complete
-      const uploadedFileUrls = await Promise.all(uploadPromises);
-      console.log("All files uploaded successfully:", uploadedFileUrls);
-
-      // Create new records in the database after all uploads complete
-      await axios.post("http://localhost:3005/createRecords", {
-        filesData: uploadedFileUrls,
-        messageId: //message ID
-      });
-
-      console.log("Database records created successfully");
-    } catch (error) {
-      console.error("Error during file upload process:", error);
-    }
-  };
-  */
-
-  const handleSend = async () => {
-    if (!message.trim() && files.length === 0) {
-      alert("Cannot send an empty message.");
+      setIsMessageEdit(false);
+      setTargetMessageId(undefined);
+      setMessageText("");
       return;
     }
 
-    const text = message.trim();
     const attachments = files.map((file) => ({
       fileName: file.file.name,
       saveAsMedia: file.saveAsMedia,
@@ -241,7 +167,6 @@ export const MessageInput = ({
       // Upload files to signed URLs
       const uploadPromises = files.map((file, index) => {
         const fileUrl = urls[index].url;
-        console.log(`Uploading file to: ${fileUrl}`);
         return axios.put(fileUrl, file.file, {
           headers: {
             "Content-Type": file.file.type,
@@ -251,7 +176,6 @@ export const MessageInput = ({
 
       // Wait for all uploads to complete
       await Promise.all(uploadPromises);
-      console.log("All files uploaded successfully.");
 
       // Prepare the list of uploaded file URLs and metadata
       const uploadedFiles = urls.map(
@@ -267,16 +191,16 @@ export const MessageInput = ({
       // Emit message event with text and attachments
       const payload = {
         roomId,
-        text: message.trim(),
+        text: messageText.trim(),
         attachments: uploadedFiles,
         tempId,
+        originalMessageId: isMessageReply ? targetMessageId : null,
       };
 
       socket.emit("sendMessage", payload);
-      console.log("Message sent:", payload);
 
       // Clear input fields and file attachments
-      setMessage("");
+      setMessageText("");
       setFiles([]);
     } catch (error) {
       console.error("Error sending message:", error);
@@ -285,75 +209,99 @@ export const MessageInput = ({
   };
 
   const handleVoiceRecord = () => {
-    console.log("Start recording voice message...");
     // Add logic for starting voice recording
   };
 
   return (
     <div className={styles.messageInputBox}>
       <div className={styles.leftBox}>
-        <div>
-          {/* emoji selection container */}
-          <IconButton
-            onClick={handleEmojiClick}
-            sx={{ color: "var(--color-text-default)" }}
-          >
-            <EmojiEmotionsIcon />
-          </IconButton>
-        </div>
-        <div>
-          <Box
-            component="form"
-            sx={{ "& > :not(style)": { m: 1 } }}
-            noValidate
-            autoComplete="off"
-          >
-            <Input
-              placeholder="Type message..."
-              inputProps={ariaLabel}
-              multiline
-              fullWidth
-              value={message}
-              onChange={(e) => handleSetText(e.target.value)}
-              sx={{
-                color: "var(--color-text-default)",
-                "&::before": {
-                  borderBottom: "1px solid white !important", // Default underline color
-                },
-                "&::after": {
-                  borderBottom: "2px solid hsl(194, 31%, 27%) !important", // focused underline color
-                },
-                "&:hover:not(.Mui-disabled):before": {
-                  borderBottom: "1px solid white !important", // Hover effect
-                },
-              }}
-            />
-          </Box>
-        </div>
-        <div>
-          <input
-            type="file"
-            id="file-upload"
-            multiple
-            style={{ display: "none", color: "var(--color-text-default)" }} // Hide the default file input
-            onChange={handleFileChange}
-          />
-          <label htmlFor="file-upload">
+        {isMessageReply && targetMessageId && (
+          <div className={styles.replyBox}>
+            <div>
+              <Reply sx={{ fontSize: 40 }} />
+            </div>
+            <div>
+              {messages
+                .filter((msg) => msg.id === targetMessageId) // Find the matching message
+                .map((msg) => (
+                  <div key={msg.id}>
+                    <Typography>{msg.text}</Typography>
+                  </div>
+                ))}
+            </div>
+            <div>
+              <CloseIcon
+                className="SVGColorController"
+                sx={{ fontSize: 40 }}
+                onClick={() => setIsMessageReply(false)}
+              />
+            </div>
+          </div>
+        )}
+        <div className={styles.inputBox}>
+          <div>
+            {/* emoji selection container */}
             <IconButton
-              component="span"
+              onClick={handleEmojiClick}
               sx={{ color: "var(--color-text-default)" }}
             >
-              <AttachFileIcon />
+              <EmojiEmotionsIcon sx={{ fontSize: "28px" }} />
             </IconButton>
-          </label>
+          </div>
+          <div>
+            <Box
+              component="form"
+              sx={{ "& > :not(style)": { m: 1 } }}
+              noValidate
+              autoComplete="off"
+            >
+              <Input
+                placeholder="Type message..."
+                inputProps={ariaLabel}
+                multiline
+                fullWidth
+                value={messageText}
+                onChange={(e) => handleSetText(e.target.value)}
+                sx={{
+                  color: "var(--color-text-default)",
+                  "&::before": {
+                    borderBottom: "1px solid white !important", // Default underline color
+                  },
+                  "&::after": {
+                    borderBottom: "2px solid hsl(194, 31%, 27%) !important", // focused underline color
+                  },
+                  "&:hover:not(.Mui-disabled):before": {
+                    borderBottom: "1px solid white !important", // Hover effect
+                  },
+                }}
+              />
+            </Box>
+          </div>
+          <div>
+            <input
+              type="file"
+              id="file-upload"
+              multiple
+              style={{ display: "none", color: "var(--color-text-default)" }} // Hide the default file input
+              onChange={handleFileChange}
+            />
+            <label htmlFor="file-upload">
+              <IconButton
+                component="span"
+                sx={{ color: "var(--color-text-default)" }}
+              >
+                <AttachFileIcon />
+              </IconButton>
+            </label>
+          </div>
         </div>
       </div>
       <div className={styles.rightBox}>
         {/* Voice message or Send button */}
-        {message || files.length ? (
+        {messageText || files.length ? (
           <IconButton
             onClick={handleSend}
-            disabled={!message && files.length == 0}
+            disabled={!messageText && files.length == 0}
             className={styles.fade}
             sx={{ color: "var(--color-text-default)" }}
           >
@@ -373,7 +321,7 @@ export const MessageInput = ({
       {showFileWindow && (
         <SelectFiles
           files={files}
-          text={message}
+          text={messageText}
           onDeleteFile={handleRemoveFile}
           onClose={handleCloseWindow}
           onTextChange={handleSetText}
@@ -382,19 +330,6 @@ export const MessageInput = ({
           onFileTypeChange={handleFileTypeChange}
         />
       )}
-
-      {/* files.length > 0 && (
-        <div className={styles.attachedFiles}>
-          {files.map((file, index) => (
-            <div key={index} className={styles.fileItem}>
-              <span>{file.file.name}</span>
-              <IconButton size="small" onClick={() => handleRemoveFile(index)}>
-                ❌
-              </IconButton>
-            </div>
-          ))}
-        </div>
-          ) */}
     </div>
   );
 };

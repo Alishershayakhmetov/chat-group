@@ -12,6 +12,7 @@ import Switch from "@mui/material/Switch";
 import { SelectGroupChannel } from "./selectGroupChannel";
 import styles from "../styles/leftSlide.module.css";
 import useDarkMode from "../hooks/useDarkMode";
+import { useSocketContext } from "../contexts/socketContext";
 
 const label = { inputProps: { "aria-label": "Dark Mode Switch" } };
 
@@ -20,6 +21,7 @@ const LeftSlideBox: React.FC<{
   onClose: () => void;
   onSelect: (entity: string) => void;
 }> = ({ isVisible, onClose, onSelect }) => {
+  const socket = useSocketContext();
   const [isDarkMode, setIsDarkMode] = useDarkMode();
 
   const handleDarkModeToggle = () => {
@@ -83,6 +85,9 @@ const LeftSlideBox: React.FC<{
               sx={{ fontSize: 32 }}
             />
           }
+          onClick={() => {
+            socket.emit("enterChat", "savedMessages");
+          }}
           text="Saved Messages"
         />
         <MenuChoose

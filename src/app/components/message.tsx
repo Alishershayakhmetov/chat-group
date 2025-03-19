@@ -1,16 +1,110 @@
+"use client";
 import Image from "next/image";
 import styles from "../styles/message.module.css";
 import { attachment, message } from "../interfaces/interfaces";
 import { extractTime } from "../utils/formatDate";
 import UserImage from "./userImage";
-import { Card, CardContent, Typography } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+  Typography,
+} from "@mui/material";
 import { formatFileSize } from "../utils/formatFileSize";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
+import { useEffect, useRef, useState } from "react";
+import { EditNote, Delete, Reply, Forward } from "@mui/icons-material";
+import { useSocketContext } from "../contexts/socketContext";
+import ForwardList from "./forwardList";
 
-export const Message = ({ data }: { data: message }) => {
-  console.log(data);
+export const Message = ({
+  data,
+  handleEditMessage,
+  handleReplyMessage,
+}: {
+  data: message;
+  handleEditMessage: ({
+    messageId,
+    messageText,
+  }: {
+    messageId: string;
+    messageText: string;
+  }) => void;
+  handleReplyMessage: ({ messageId }: { messageId: string }) => void;
+}) => {
+  const socket = useSocketContext();
+  const [showMenu, setShowMenu] = useState(false);
+  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+  const holdTimer = useRef<NodeJS.Timeout | null>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const [isForwardModalOpen, setIsForwardModalOpen] = useState(false);
+
+  // Close menu on click outside or scroll
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent | TouchEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setShowMenu(false);
+      }
+    };
+
+    const handleScroll = () => setShowMenu(false);
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+    document.addEventListener("scroll", handleScroll, true);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+      document.removeEventListener("scroll", handleScroll, true);
+    };
+  }, []);
+
+  // Close menu on click outside
+  useEffect(() => {
+    const handleClickOutside = () => setShowMenu(false);
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
+
+  // Handle right-click (desktop)
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent default right-click menu
+    setMenuPosition({ x: e.clientX, y: e.clientY });
+    setShowMenu(true);
+  };
+
+  // Handle long press (mobile)
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (e.cancelable) e.preventDefault(); // Prevent native touch context menu
+
+    holdTimer.current = setTimeout(() => {
+      const touch = e.touches[0];
+      setMenuPosition({ x: touch.clientX, y: touch.clientY });
+      setShowMenu(true);
+    }, 500);
+  };
+
+  const handleTouchEnd = () => {
+    if (holdTimer.current) {
+      clearTimeout(holdTimer.current);
+    }
+  };
+
+  const handleDeleteMessage = () => {
+    socket.emit("deleteMessage", { messageId: data.id });
+  };
+
   return (
-    <div className={styles.messageBox}>
+    <div
+      className={styles.messageBox}
+      onContextMenu={handleContextMenu}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
       <div className={styles.profileImageBox}>
         <UserImage
           src={data.imgURL}
@@ -20,10 +114,18 @@ export const Message = ({ data }: { data: message }) => {
         />
       </div>
       <div className={styles.rightBox}>
+        {data.originalMessageId && data.originalMsg && (
+          <div>
+            <Typography>{data.originalMsg.user.name}</Typography>
+            <Typography>{data.originalMsg.text}</Typography>
+          </div>
+        )}
         <div className={styles.contentBox}>
           <div className={`${styles.relative} ${styles.messageHeader}`}>
             <span>{data.userName}</span>
-            <span className={styles.time}>{extractTime(data.updatedAt)}</span>
+            <span className={styles.time}>
+              {data.isEdited && "edited"} {extractTime(data.updatedAt)}
+            </span>
           </div>
 
           {/* Render Media */}
@@ -39,12 +141,62 @@ export const Message = ({ data }: { data: message }) => {
           <DownloadMedia attachments={data.attachments} />
         </div>
       </div>
+      {showMenu && (
+        <Menu
+          open={showMenu}
+          anchorReference="anchorPosition"
+          anchorPosition={{
+            top: menuPosition.y,
+            left: menuPosition.x,
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "left",
+          }}
+        >
+          <MenuItem onClick={handleDeleteMessage}>
+            <ListItemIcon>
+              <Delete fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Delete</ListItemText>
+          </MenuItem>
+          <MenuItem onClick={() => handleReplyMessage({ messageId: data.id! })}>
+            <ListItemIcon>
+              <Reply fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Reply</ListItemText>
+          </MenuItem>
+          <MenuItem onClick={() => setIsForwardModalOpen(true)}>
+            <ListItemIcon>
+              <Forward fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Forward</ListItemText>
+          </MenuItem>
+          <MenuItem
+            onClick={() =>
+              handleEditMessage({ messageId: data.id!, messageText: data.text })
+            }
+          >
+            <ListItemIcon>
+              <EditNote fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Edit</ListItemText>
+          </MenuItem>
+        </Menu>
+      )}
+
+      {isForwardModalOpen && (
+        <ForwardList
+          isOpen={isForwardModalOpen}
+          onClose={() => setIsForwardModalOpen(false)}
+          message={data}
+        />
+      )}
     </div>
   );
 };
 
 const RenderMedia = ({ attachments }: { attachments: attachment[] }) => {
-  console.log(`check Attach: ${attachments}`);
   return (
     <div className={styles.mediaContainer}>
       {attachments
@@ -105,7 +257,6 @@ const DownloadMedia = ({ attachments }: { attachments: attachment[] }) => {
 };
 
 const MediaComponent = ({ url, name }: { url: string; name: string }) => {
-  console.log(url, name);
   // Render the appropriate media type (image, video, etc.)
   if (name.endsWith(".mp4")) {
     return <video controls src={url} className={styles.video} />;
@@ -114,35 +265,7 @@ const MediaComponent = ({ url, name }: { url: string; name: string }) => {
   }
   return <a href={url}>View Media</a>;
 };
-/*
-const downloadMedia = async (url: string, name: string) => {
-  try {
-    // Fetch the file as a Blob
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error("Failed to download file");
-    }
 
-    const blob = await response.blob();
-
-    // Create a temporary URL for the Blob
-    const blobUrl = URL.createObjectURL(blob);
-
-    // Create a link element and trigger the download
-    const link = document.createElement("a");
-    link.href = blobUrl;
-    link.download = name || "download"; // Use the file name from the URL or a default name
-    document.body.appendChild(link);
-    link.click();
-
-    // Clean up
-    document.body.removeChild(link);
-    URL.revokeObjectURL(blobUrl);
-  } catch (error) {
-    console.error("Error downloading file:", error);
-  }
-};
-*/
 const downloadMedia = (url: string) => {
   const link = document.createElement("a");
   link.href = url;

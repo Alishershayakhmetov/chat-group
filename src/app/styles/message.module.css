@@ -13,7 +13,8 @@
 }
 .rightBox {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    row-gap: 12px;
     
     background-color: var(--bg-color-text-default);
     margin: 2px 0;

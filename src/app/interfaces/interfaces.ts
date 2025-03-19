@@ -34,12 +34,9 @@ export interface searchedChats {
 
 export interface message {
   id?: string,
-  // updatedAt: string,
-  // createdAt: string,
   updatedAt: Date,
   createdAt: Date,
-  text: string, // Text
-  // attachments: string[], // image, video, audio, file
+  text: string,
   attachments: attachment[],
   userId?: string,
   roomId?: string,
@@ -48,7 +45,16 @@ export interface message {
   userName?: string,
 
   status: MessageStatus,
-  tempId?: string
+  tempId?: string,
+
+  originalMessageId?: string,
+  originalMsg?: {
+    text?: string
+    user: {
+      name?: string
+      lastName?: string
+    }
+  }
 }
 
 export enum MessageStatus {

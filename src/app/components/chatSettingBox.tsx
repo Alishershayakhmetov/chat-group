@@ -42,7 +42,7 @@ export default function ChatSettingBox({ isOpen, onClose, chatData }: any) {
         <Box className={styles.profileSection}>
           <Box className={styles.profileImage}>
             <Image
-              src={chatData.profileImage || "/placeholder.png"}
+              src={chatData.profileImage || "/user-solid.svg"}
               width={80}
               height={80}
               alt="Profile"

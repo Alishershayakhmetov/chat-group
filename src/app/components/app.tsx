@@ -2,14 +2,10 @@
 import { TextField } from "@mui/material";
 import styles from "../styles/app.module.css";
 import { ChatSlide } from "./chatSlide";
-import { ChatHeader } from "./chatHeader";
-import { Message } from "./message";
 import { LeftSlide } from "./leftSlide";
-import { MessageInput } from "./messageInput";
 import { useEffect, useRef, useState } from "react";
 import {
   chatLastMessageData,
-  roomDataWithMessages,
   searchedChats,
   message,
   roomData,
@@ -41,13 +37,10 @@ export const App = () => {
       roomData: roomData;
       messages: message[];
     }) => {
-      console.log("roomData: ", data);
       setRoomData(data.roomData);
       setMessages(data.messages);
     };
     const handleNewMessage = (data: message) => {
-      console.log(`Received new message: ${data.tempId}`);
-
       setMessages((prevMessages) => {
         const DuplicateIndex = prevMessages.findIndex(
           (message) => message.tempId === data.tempId
@@ -62,7 +55,6 @@ export const App = () => {
         }
 
         // Add new message to the array
-        console.log("New message added:", data);
         return [...prevMessages, data];
       });
     };
@@ -75,6 +67,22 @@ export const App = () => {
       setChats((prevChats) => [newChannel, ...prevChats]);
     };
 
+    const handleDeleteMessage = (messageId: string) => {
+      setMessages((prevMessages) =>
+        prevMessages.filter((msg) => msg.id !== messageId)
+      );
+    };
+
+    const handleEditMessage = (formattedMessage: message) => {
+      setMessages((prevMessages) =>
+        prevMessages.map((msg) =>
+          msg.id === formattedMessage.id
+            ? { ...msg, ...formattedMessage } // Merge updated properties
+            : msg
+        )
+      );
+    };
+
     // Register event listeners
     socket.on("chats", handleChats);
     socket.on("searchResult", handleSearchResults);
@@ -82,6 +90,8 @@ export const App = () => {
     socket.on("newMessage", handleNewMessage);
     socket.on("createNewGroup", handleCreateNewGroup);
     socket.on("createNewChannel", handleCreateNewChannel);
+    socket.on("deleteMessage", handleDeleteMessage);
+    socket.on("editMessage", handleEditMessage);
 
     // Cleanup event listeners on unmount
     return () => {
@@ -91,6 +101,8 @@ export const App = () => {
       socket.off("newMessage", handleNewMessage);
       socket.off("createNewGroup", handleCreateNewGroup);
       socket.off("createNewChannel", handleCreateNewChannel);
+      socket.off("deleteMessage", handleDeleteMessage);
+      socket.off("editMessage", handleEditMessage);
     };
   }, [socket]); // Dependency array ensures this runs only once
 

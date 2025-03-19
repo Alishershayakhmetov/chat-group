@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Image from "next/image";
 import styles from "../styles/chat.module.css";
 import { roomData } from "../interfaces/interfaces";
 import UserImage from "./userImage";
