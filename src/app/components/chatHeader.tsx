@@ -6,12 +6,18 @@ import ChatSettingBox from "./chatSettingBox";
 import { Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
-export const ChatHeader = ({ data }: { data: roomData | undefined }) => {
+export const ChatHeader = ({
+  data,
+  userStatus,
+}: {
+  data: roomData | undefined;
+  userStatus: { userId: string; status: string; lastSeen: Date | undefined };
+}) => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const chatStatus =
     data && data.roomType === "chat"
-      ? `last seen on ${data.lastActiveTime}`
+      ? `last seen on ${userStatus.lastSeen}`
       : data?.roomType === "group"
       ? `${data.numberOfMembers} members`
       : `${data?.numberOfMembers} subscribers`;

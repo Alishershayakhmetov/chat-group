@@ -83,6 +83,28 @@ export const App = () => {
       );
     };
 
+    const handleNewMessageNotification = (message: {
+      roomId: any;
+      userName: string | null | undefined;
+      userId: string;
+      text: string | null;
+      isAttachment: boolean;
+      lastMessageTime: String;
+    }) => {
+      setChats((prevChats) =>
+        prevChats.map((chat) =>
+          chat.roomId === message.roomId
+            ? {
+                ...chat,
+                messageUserName: message.userName || "noName",
+                messageText: message.text || "",
+                lastMessageTime: message.lastMessageTime.toString(),
+              }
+            : chat
+        )
+      );
+    };
+
     // Register event listeners
     socket.on("chats", handleChats);
     socket.on("searchResult", handleSearchResults);
@@ -92,6 +114,7 @@ export const App = () => {
     socket.on("createNewChannel", handleCreateNewChannel);
     socket.on("deleteMessage", handleDeleteMessage);
     socket.on("editMessage", handleEditMessage);
+    socket.on("newMessageNotification", handleNewMessageNotification);
 
     // Cleanup event listeners on unmount
     return () => {
@@ -103,6 +126,7 @@ export const App = () => {
       socket.off("createNewChannel", handleCreateNewChannel);
       socket.off("deleteMessage", handleDeleteMessage);
       socket.off("editMessage", handleEditMessage);
+      socket.off("newMessageNotification", handleNewMessageNotification);
     };
   }, [socket]); // Dependency array ensures this runs only once
 

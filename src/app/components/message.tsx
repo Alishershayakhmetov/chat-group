@@ -199,16 +199,17 @@ export const Message = ({
 const RenderMedia = ({ attachments }: { attachments: attachment[] }) => {
   return (
     <div className={styles.mediaContainer}>
-      {attachments
-        .filter((attachment) => !attachment.saveAsMedia)
-        .map((attachment, index) => (
-          <div key={index} className={styles.mediaItem}>
-            <MediaComponent
-              url={attachment.fileURL}
-              name={attachment.fileName}
-            />
-          </div>
-        ))}
+      {attachments &&
+        attachments
+          .filter((attachment) => !attachment.saveAsMedia)
+          .map((attachment, index) => (
+            <div key={index} className={styles.mediaItem}>
+              <MediaComponent
+                url={attachment.fileURL}
+                name={attachment.fileName}
+              />
+            </div>
+          ))}
     </div>
   );
 };
@@ -216,42 +217,43 @@ const RenderMedia = ({ attachments }: { attachments: attachment[] }) => {
 const DownloadMedia = ({ attachments }: { attachments: attachment[] }) => {
   return (
     <div className={styles.downloadContainer}>
-      {attachments
-        .filter((attachment) => attachment.saveAsMedia)
-        .map((attachment) => (
-          <Card
-            key={attachment.fileURL}
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              padding: 1,
-              cursor: "pointer",
-              backgroundColor: "var(--bg-color-text-default)",
-            }}
-            onClick={() => downloadMedia(attachment.fileURL!)}
-          >
-            <InsertDriveFileIcon
+      {attachments &&
+        attachments
+          .filter((attachment) => attachment.saveAsMedia)
+          .map((attachment) => (
+            <Card
+              key={attachment.fileURL}
               sx={{
-                fontSize: 34,
-                color: "var(--color-text-default)",
+                display: "flex",
+                alignItems: "center",
+                padding: 1,
+                cursor: "pointer",
+                backgroundColor: "var(--bg-color-text-default)",
               }}
-            />
-            <CardContent
-              sx={{ flex: 1, padding: "0", paddingBottom: "0 !important" }}
+              onClick={() => downloadMedia(attachment.fileURL!)}
             >
-              <Typography
-                variant="body1"
-                fontWeight="bold"
-                sx={{ color: "var(--color-text-default)" }}
+              <InsertDriveFileIcon
+                sx={{
+                  fontSize: 34,
+                  color: "var(--color-text-default)",
+                }}
+              />
+              <CardContent
+                sx={{ flex: 1, padding: "0", paddingBottom: "0 !important" }}
               >
-                {attachment.fileName}
-              </Typography>
-              <Typography variant="body2" color="var(--color-text-default)">
-                {formatFileSize(attachment.fileSize)}
-              </Typography>
-            </CardContent>
-          </Card>
-        ))}
+                <Typography
+                  variant="body1"
+                  fontWeight="bold"
+                  sx={{ color: "var(--color-text-default)" }}
+                >
+                  {attachment.fileName}
+                </Typography>
+                <Typography variant="body2" color="var(--color-text-default)">
+                  {formatFileSize(attachment.fileSize)}
+                </Typography>
+              </CardContent>
+            </Card>
+          ))}
     </div>
   );
 };

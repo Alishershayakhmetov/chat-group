@@ -27,6 +27,7 @@ export const ChatForm = ({
     }[];
   }) => string;
 }) => {
+  const socket = useSocketContext();
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const [messageText, setMessageText] = useState("");
   const [isMessageEdit, setIsMessageEdit] = useState(false);
@@ -34,13 +35,34 @@ export const ChatForm = ({
     undefined
   );
   const [isMessageReply, setIsMessageReply] = useState(false);
+  const [userStatus, setUserStatus] = useState({
+    userId: roomData.id,
+    status: roomData.isActive ? "online" : "offline",
+    lastSeen: roomData.lastActiveTime,
+  });
 
   // Scroll to the last message when messages are updated
   useEffect(() => {
     if (bottomRef.current) {
       bottomRef.current.scrollIntoView({ behavior: "instant" });
     }
-  }, []);
+
+    const handleUserStatusNotification = ({
+      userId,
+      status,
+      lastSeen,
+    }: {
+      userId: string;
+      status: "online" | "offline";
+      lastSeen: Date | undefined;
+    }) => {
+      setUserStatus({ userId, status, lastSeen });
+    };
+    socket.on("userStatusNotification", handleUserStatusNotification);
+    return () => {
+      socket.off("userStatusNotification", handleUserStatusNotification);
+    };
+  }, [socket]);
 
   const handleEditMessage = ({
     messageId,
@@ -61,7 +83,7 @@ export const ChatForm = ({
 
   return (
     <div className={styles.contentBox}>
-      <ChatHeader data={roomData} />
+      <ChatHeader data={roomData} userStatus={userStatus} />
       <div className={styles.messageBox}>
         {messages &&
           messages.map((message: message, index) => (
