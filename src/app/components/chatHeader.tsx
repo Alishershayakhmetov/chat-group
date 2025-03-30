@@ -11,13 +11,27 @@ export const ChatHeader = ({
   userStatus,
 }: {
   data: roomData | undefined;
-  userStatus: { userId: string; status: string; lastSeen: Date | undefined };
+  userStatus: { userId: string; status: string; lastSeen: string | undefined };
 }) => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
+  const formatLastActive = (isoString: string | undefined) => {
+    if (isoString === undefined) return undefined;
+    const date = new Date(isoString);
+    return date.toLocaleString("en-US", {
+      weekday: "short", // e.g., "Fri"
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true, // Use 12-hour format
+    });
+  };
+
   const chatStatus =
     data && data.roomType === "chat"
-      ? `last seen on ${userStatus.lastSeen}`
+      ? userStatus.status === "online"
+        ? "online"
+        : `last seen on ${formatLastActive(userStatus.lastSeen)}`
       : data?.roomType === "group"
       ? `${data.numberOfMembers} members`
       : `${data?.numberOfMembers} subscribers`;

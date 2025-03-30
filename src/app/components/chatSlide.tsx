@@ -1,3 +1,4 @@
+import { Typography } from "@mui/material";
 import { useSocketContext } from "../contexts/socketContext";
 import {
   chatLastMessageData,
@@ -33,11 +34,14 @@ export const ChatSlide = ({
             <p>{data.messageTime && FormatDate(data.messageTime)}</p>
           </div>
           <div className={styles.info}>
-            <p>
+            <Typography>
               {data.messageAuthor &&
-                data.lastMessageContent &&
-                `${data.messageAuthor}: ${data.lastMessageContent}`}
-            </p>
+                `${data.messageAuthor}: ${
+                  data.lastMessageContent !== null
+                    ? data.lastMessageContent
+                    : "media"
+                }`}
+            </Typography>
             <p>
               <span>{data.icon}</span>
             </p>
@@ -61,9 +65,10 @@ export const ChatSlide = ({
         </div>
         <div className={styles.info}>
           <p>
-            {data.messageUserName && data.messageText
-              ? `${data.messageUserName}: ${data.messageText}`
-              : ""}
+            {data.messageUserName &&
+              `${data.messageUserName}: ${
+                data.messageText ? data.messageText : "media"
+              }`}
           </p>
           <p>
             <span>{data.numberOfUnreadMessages}</span>

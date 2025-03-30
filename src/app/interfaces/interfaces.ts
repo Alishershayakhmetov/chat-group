@@ -66,8 +66,9 @@ export enum MessageStatus {
 export interface attachment {
   fileURL: string,
   fileName: string,
-  saveAsMedia?: boolean
-  fileSize?: number
+  saveAsMedia?: boolean,
+  fileSize?: number,
+  fileBase64Blur?: string
 }
 
 export interface roomData {
@@ -76,8 +77,9 @@ export interface roomData {
   roomName: string,
   roomType: "chat" | "group" | "channel",
   numberOfMembers?: string,
-  lastActiveTime?: Date,
-  isActive?: Boolean
+  lastActiveTime?: string,
+  isActive?: boolean,
+  isMember?: boolean
 }
 
 export interface roomDataWithMessages {

@@ -13,6 +13,7 @@ import axios from "axios";
 import { message } from "../interfaces/interfaces";
 import { v4 as uuid } from "uuid";
 import SelectFiles from "./selectFiles";
+import { generateBase64Blur } from "../utils/base64blur";
 
 import { Close as CloseIcon, Reply } from "@mui/icons-material";
 
@@ -151,20 +152,27 @@ export const MessageInput = ({
     const tempId = addTemp({ text, attachments });
 
     try {
-      // Extract file extensions
       const extensions = files.map((file) => {
         const parts = file.file.name.split(".");
         return parts.length > 1 ? parts.pop() : ""; // Handle files without extensions
       });
 
-      // Request signed upload URLs for files
+      // Generate base64 blur hashes only for image files that should be saved as media
+      const blurHashPromises = files.map((file, index) => {
+        const isImage = file.file.type.startsWith("image/");
+        if (isImage && !file.saveAsMedia) {
+          return generateBase64Blur(file.file);
+        }
+        return Promise.resolve(""); // Empty string for non-image files or non-media files
+      });
+      const blurHashes = await Promise.all(blurHashPromises);
+
       const result = await axios.post("http://localhost:3005/upload", {
         extensions,
       });
 
       const urls: { url: string; key: string }[] = result.data.urls;
 
-      // Upload files to signed URLs
       const uploadPromises = files.map((file, index) => {
         const fileUrl = urls[index].url;
         return axios.put(fileUrl, file.file, {
@@ -174,7 +182,6 @@ export const MessageInput = ({
         });
       });
 
-      // Wait for all uploads to complete
       await Promise.all(uploadPromises);
 
       // Prepare the list of uploaded file URLs and metadata
@@ -185,10 +192,10 @@ export const MessageInput = ({
           url: url.url.split("?")[0], // Remove query parameters from URL
           saveAsMedia: files[index].saveAsMedia,
           fileSize: files[index].file.size,
+          fileBase64Blur: blurHashes[index],
         })
       );
 
-      // Emit message event with text and attachments
       const payload = {
         roomId,
         text: messageText.trim(),
@@ -199,7 +206,6 @@ export const MessageInput = ({
 
       socket.emit("sendMessage", payload);
 
-      // Clear input fields and file attachments
       setMessageText("");
       setFiles([]);
     } catch (error) {
@@ -213,7 +219,12 @@ export const MessageInput = ({
   };
 
   return (
-    <div className={styles.messageInputBox}>
+    <div
+      className={styles.messageInputBox}
+      style={{
+        bottom: isMessageReply ? "-118px" : "-58px",
+      }}
+    >
       <div className={styles.leftBox}>
         {isMessageReply && targetMessageId && (
           <div className={styles.replyBox}>

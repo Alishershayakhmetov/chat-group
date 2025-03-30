@@ -207,6 +207,7 @@ const RenderMedia = ({ attachments }: { attachments: attachment[] }) => {
               <MediaComponent
                 url={attachment.fileURL}
                 name={attachment.fileName}
+                fileBase64Blur={attachment.fileBase64Blur}
               />
             </div>
           ))}
@@ -258,12 +259,29 @@ const DownloadMedia = ({ attachments }: { attachments: attachment[] }) => {
   );
 };
 
-const MediaComponent = ({ url, name }: { url: string; name: string }) => {
+const MediaComponent = ({
+  url,
+  name,
+  fileBase64Blur,
+}: {
+  url: string;
+  name: string;
+  fileBase64Blur: string | undefined;
+}) => {
   // Render the appropriate media type (image, video, etc.)
   if (name.endsWith(".mp4")) {
     return <video controls src={url} className={styles.video} />;
   } else if (name.endsWith(".jpg") || name.endsWith(".png")) {
-    return <Image src={url} alt="Media" width={200} height={200} />;
+    return (
+      <Image
+        src={url}
+        alt="Media"
+        width={200}
+        height={200}
+        placeholder={fileBase64Blur ? "blur" : "empty"}
+        blurDataURL={fileBase64Blur}
+      />
+    );
   }
   return <a href={url}>View Media</a>;
 };
