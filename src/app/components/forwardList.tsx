@@ -14,6 +14,8 @@ import {
 } from "@mui/material";
 import { useSocketContext } from "../contexts/socketContext";
 import { message } from "../interfaces/interfaces";
+import Image from "next/image";
+import UserImage from "./userImage";
 
 interface Room {
   id: string;
@@ -32,7 +34,7 @@ export default function ForwardList({
   onClose,
   message,
 }: ForwardListProps) {
-  const socket = useSocketContext();
+  const { socket } = useSocketContext();
   const [search, setSearch] = useState("");
   const [rooms, setRooms] = useState<Room[]>([]);
   const [selectedRooms, setSelectedRooms] = useState<string[]>([]);
@@ -98,6 +100,12 @@ export default function ForwardList({
                     checked={selectedRooms.includes(room.id)}
                     tabIndex={-1}
                     disableRipple
+                  />
+                  <UserImage
+                    src={room.chatImageURL}
+                    alt="User image"
+                    width={50}
+                    height={50}
                   />
                   <ListItemText primary={room.chatName} />
                 </ListItemButton>

@@ -14,7 +14,7 @@ export const ChatSlide = ({
 }: {
   data: chatLastMessageData | searchedChats;
 }) => {
-  const socket = useSocketContext();
+  const { socket } = useSocketContext();
   if (isObjectSearchedChats(data)) {
     return (
       <div

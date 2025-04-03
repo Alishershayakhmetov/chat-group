@@ -29,7 +29,7 @@ export const ChatForm = ({
     }[];
   }) => string;
 }) => {
-  const socket = useSocketContext();
+  const { socket, userId } = useSocketContext();
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const [messageText, setMessageText] = useState("");
   const [isMessageEdit, setIsMessageEdit] = useState(false);
@@ -115,15 +115,28 @@ export const ChatForm = ({
       <ChatHeader data={roomData} userStatus={userStatus} />
       <div className={styles.messageBox}>
         {messages &&
-          messages.map((message: message, index) => (
-            // get warning with key={message.id}
-            <Message
-              key={index}
-              data={message}
-              handleEditMessage={handleEditMessage}
-              handleReplyMessage={handleReplyMessage}
-            />
-          ))}
+          messages.map((message: message, index) => {
+            const currentDate = new Date(message.createdAt).toDateString();
+            const previousDate =
+              index > 0
+                ? new Date(messages[index - 1].createdAt).toDateString()
+                : null;
+
+            return (
+              // get warning with key={message.id}
+              <div key={message.id || index}>
+                {currentDate !== previousDate && (
+                  <div className={styles.dateDivider}>{currentDate}</div>
+                )}
+                <Message
+                  data={message}
+                  handleEditMessage={handleEditMessage}
+                  handleReplyMessage={handleReplyMessage}
+                  userId={userId}
+                />
+              </div>
+            );
+          })}
         <div ref={bottomRef} />
       </div>
       {showMessageInput ? (

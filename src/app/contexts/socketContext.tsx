@@ -1,17 +1,38 @@
-import React, { MutableRefObject, createContext, useContext } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import ENV from "../utils/env";
 import useSocket from "../hooks/useSocket";
 import { Socket } from "socket.io-client";
 
-const SocketContext = createContext<Socket | null>(null);
+interface SocketContextType {
+  socket: Socket;
+  userId: string | null;
+}
+
+const SocketContext = createContext<SocketContextType | null>(null);
 
 export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const socket = useSocket(ENV.SOCKET_URL);
+  const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("userId", (id: string) => {
+        console.log("Received userId:", id);
+        setUserId(id);
+      });
+
+      return () => {
+        socket.off("userId");
+      };
+    }
+  }, [socket]);
 
   return (
-    <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
+    <SocketContext.Provider value={{ socket, userId }}>
+      {children}
+    </SocketContext.Provider>
   );
 };
 

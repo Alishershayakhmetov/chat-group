@@ -15,7 +15,7 @@ import { v4 as uuid } from "uuid";
 import SelectFiles from "./selectFiles";
 import { generateBase64Blur } from "../utils/base64blur";
 
-import { Close as CloseIcon, Reply } from "@mui/icons-material";
+import { Close as CloseIcon, Edit, EditNote, Reply } from "@mui/icons-material";
 
 interface FileAttachmentProps {
   onFileSelect: (file: File) => void;
@@ -68,7 +68,7 @@ export const MessageInput = ({
     []
   );
   const [showFileWindow, setShowFileWindow] = useState(false);
-  const socket = useSocketContext();
+  const { socket } = useSocketContext();
 
   const handleSetText = (text: string) => {
     setMessageText(text);
@@ -226,11 +226,13 @@ export const MessageInput = ({
       }}
     >
       <div className={styles.leftBox}>
-        {isMessageReply && targetMessageId && (
+        {(isMessageReply || isMessageEdit) && targetMessageId && (
           <div className={styles.replyBox}>
-            <div>
+            {isMessageReply ? (
               <Reply sx={{ fontSize: 40 }} />
-            </div>
+            ) : (
+              <EditNote sx={{ fontSize: 40 }} />
+            )}
             <div>
               {messages
                 .filter((msg) => msg.id === targetMessageId) // Find the matching message

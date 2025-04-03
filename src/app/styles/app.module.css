@@ -97,6 +97,15 @@
     background-color: rgba(0, 0, 0, 0.5);
 }
 
+.dateDivider {
+    text-align: center;
+    margin: 10px 0;
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--color-text-default);
+    background-color: hsla(196, 23%, 51%, 0.4);
+  }  
+
 @media (max-width: 768px) {
     .leftSlide {
       width: 35%;

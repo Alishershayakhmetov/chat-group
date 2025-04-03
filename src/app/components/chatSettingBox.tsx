@@ -164,7 +164,7 @@ const AddingList = ({
     chatImageURL: string | null;
   }
 
-  const socket = useSocketContext();
+  const { socket } = useSocketContext();
   const [search, setSearch] = useState("");
   const [rooms, setRooms] = useState<Room[]>([]);
   const [selectedRooms, setSelectedRooms] = useState<string[]>([]);

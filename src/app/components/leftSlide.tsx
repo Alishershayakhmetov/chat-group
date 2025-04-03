@@ -21,7 +21,7 @@ const LeftSlideBox: React.FC<{
   onClose: () => void;
   onSelect: (entity: string) => void;
 }> = ({ isVisible, onClose, onSelect }) => {
-  const socket = useSocketContext();
+  const { socket } = useSocketContext();
   const [isDarkMode, setIsDarkMode] = useDarkMode();
 
   const handleDarkModeToggle = () => {

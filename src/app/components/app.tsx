@@ -17,7 +17,7 @@ import { v4 as uuid } from "uuid";
 import useDarkMode from "../hooks/useDarkMode";
 
 export const App = () => {
-  const socket = useSocketContext();
+  const { socket } = useSocketContext();
 
   const [chats, setChats] = useState<chatLastMessageData[]>([]);
   const [searchInput, setSearchInput] = useState("");

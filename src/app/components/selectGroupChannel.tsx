@@ -11,7 +11,7 @@ export const SelectGroupChannel: React.FC<{
   entity: string;
   onClose: () => void;
 }> = ({ entity, onClose }) => {
-  const socket = useSocketContext();
+  const { socket } = useSocketContext();
   const [title, setTitle] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("/picture-697.svg");

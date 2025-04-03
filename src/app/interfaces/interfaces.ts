@@ -55,6 +55,28 @@ export interface message {
       lastName?: string
     }
   }
+
+  forwardedMessageId?: string,
+  forwardedMsg?: {
+    channel?: {
+      id: string,
+      imgURL: string | null,
+      name: string
+    },
+    chat?: {
+      id: string
+    },
+    group?: {
+      id: string,
+      imgURL: string | null,
+      name: string
+    },
+    user?: {
+      id: string,
+      imgURL: string | null,
+      name: string | null
+    }
+  }
 }
 
 export enum MessageStatus {
