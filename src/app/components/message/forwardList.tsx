@@ -12,10 +12,9 @@ import {
   Box,
   Checkbox,
 } from "@mui/material";
-import { useSocketContext } from "../contexts/socketContext";
-import { message } from "../interfaces/interfaces";
-import Image from "next/image";
-import UserImage from "./userImage";
+import { useSocketContext } from "../../contexts/socketContext";
+import { message } from "../../interfaces/interfaces";
+import UserImage from "../common/userImage";
 
 interface Room {
   id: string;

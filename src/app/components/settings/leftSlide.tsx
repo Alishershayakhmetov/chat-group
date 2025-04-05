@@ -10,9 +10,10 @@ import {
 } from "@mui/icons-material";
 import Switch from "@mui/material/Switch";
 import { SelectGroupChannel } from "./selectGroupChannel";
-import styles from "../styles/leftSlide.module.css";
-import useDarkMode from "../hooks/useDarkMode";
-import { useSocketContext } from "../contexts/socketContext";
+import styles from "../../styles/leftSlide.module.css";
+import useDarkMode from "../../hooks/useDarkMode";
+import { useSocketContext } from "../../contexts/socketContext";
+import { Typography } from "@mui/material";
 
 const label = { inputProps: { "aria-label": "Dark Mode Switch" } };
 
@@ -123,7 +124,7 @@ const MenuChoose: React.FC<{
   return (
     <div className={styles.menuChooseBox} onClick={onClick}>
       {icon}
-      <p>{text}</p>
+      <Typography>{text}</Typography>
     </div>
   );
 };

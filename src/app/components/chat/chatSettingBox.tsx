@@ -16,9 +16,9 @@ import {
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import styles from "../styles/chatSettingBox.module.css";
-import { useSocketContext } from "../contexts/socketContext";
-import { roomData } from "../interfaces/interfaces";
+import styles from "../../styles/chatSettingBox.module.css";
+import { useSocketContext } from "../../contexts/socketContext";
+import { roomData } from "../../interfaces/interfaces";
 
 export default function ChatSettingBox({
   isOpen,

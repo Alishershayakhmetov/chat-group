@@ -12,6 +12,10 @@
   --bg-color-chat-header: hsl(0, 0%, 91.76%);
 }
 
+body {
+  font-family: 'Noto Color Emoji', sans-serif;
+}
+
 body.dark-mode {
   --background: #171717;
   --foreground: hsl(0, 0%, 90%);

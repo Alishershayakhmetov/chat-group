@@ -1,5 +1,3 @@
-import { Socket } from "socket.io-client";
-
 export interface MenuChooseProps {
   icon: JSX.Element; // This will be the icon component
   text: string; // This will be the text label
@@ -119,4 +117,15 @@ export interface createGroupList {
   lastName: string | null, 
   imgURL: string | null, 
   status: string | null
+}
+
+export interface AddTempMessage {
+  text: string,
+  attachments: attachment []
+}
+
+export interface UserStatus {
+  userId: string, 
+  status: string, 
+  lastSeen: string | undefined 
 }

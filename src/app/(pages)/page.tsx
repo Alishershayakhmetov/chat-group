@@ -2,9 +2,12 @@
 import { useEffect, useState } from "react";
 import { App } from "../components/app";
 import axios from "axios";
-import HelloPage from "../components/helloPage";
+import HelloPage from "../components/public/helloPage";
 import URLS from "../utils/urls";
 import { SocketProvider } from "../contexts/socketContext";
+import { ChatFormProvider } from "../contexts/chatFormContext";
+import { ChatSocketProvider } from "../contexts/chatSocketContext";
+import { FilesProvider } from "../contexts/filesContext";
 
 export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -33,7 +36,13 @@ export default function Home() {
   if (isAuthenticated) {
     return (
       <SocketProvider>
-        <App />
+        <ChatFormProvider>
+          <ChatSocketProvider>
+            <FilesProvider>
+              <App />
+            </FilesProvider>
+          </ChatSocketProvider>
+        </ChatFormProvider>
       </SocketProvider>
     );
   }

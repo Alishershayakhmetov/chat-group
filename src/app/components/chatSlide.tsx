@@ -7,7 +7,7 @@ import {
 } from "../interfaces/interfaces";
 import styles from "../styles/chat.module.css";
 import { FormatDate } from "../utils/formatDate";
-import UserImage from "./userImage";
+import UserImage from "./common/userImage";
 
 export const ChatSlide = ({
   data,

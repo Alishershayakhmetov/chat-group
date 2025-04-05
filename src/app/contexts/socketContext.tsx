@@ -19,7 +19,6 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     if (socket) {
       socket.on("userId", (id: string) => {
-        console.log("Received userId:", id);
         setUserId(id);
       });
 

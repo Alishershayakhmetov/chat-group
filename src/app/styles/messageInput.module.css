@@ -51,3 +51,42 @@
     height: fit-content;
     margin: auto 0;
 }
+.emojiPickerContainer {
+    position: absolute;
+    bottom: 60px;
+    left: 10px;
+    z-index: 1000;
+  }
+  .customInput {
+    border: none;
+    outline: none;
+    width: 100%;
+    min-height: 24px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--color-text-default);
+    padding: 8px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    -webkit-text-fill-color: var(--color-text-default);
+  }
+
+
+/* messageInput.module.css */
+.emojiInput {
+    border: none;
+    outline: none;
+    width: 100%;
+    min-height: 24px;
+    padding: 8px;
+    color: var(--color-text-default);
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  
+  .twemoji {
+    height: 1em;
+    width: 1em;
+    margin: 0 0.05em 0 0.1em;
+    vertical-align: -0.1em;
+  }

@@ -1,31 +1,20 @@
 import { useState } from "react";
-import styles from "../styles/chat.module.css";
-import { roomData } from "../interfaces/interfaces";
-import UserImage from "./userImage";
+import styles from "../../styles/chat.module.css";
+import { UserStatus, roomData } from "../../interfaces/interfaces";
+import UserImage from "../common/userImage";
 import ChatSettingBox from "./chatSettingBox";
 import { Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import { formatLastActive } from "../../utils/formatLastActive";
 
 export const ChatHeader = ({
   data,
   userStatus,
 }: {
   data: roomData | undefined;
-  userStatus: { userId: string; status: string; lastSeen: string | undefined };
+  userStatus: UserStatus;
 }) => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-
-  const formatLastActive = (isoString: string | undefined) => {
-    if (isoString === undefined) return undefined;
-    const date = new Date(isoString);
-    return date.toLocaleString("en-US", {
-      weekday: "short", // e.g., "Fri"
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: true, // Use 12-hour format
-    });
-  };
 
   const chatStatus =
     data && data.roomType === "chat"

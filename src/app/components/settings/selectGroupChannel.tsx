@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Snackbar, Alert } from "@mui/material";
-import styles from "../styles/leftSlide.module.css";
+import styles from "../../styles/leftSlide.module.css";
 import { Close } from "@mui/icons-material";
-import { useSocketContext } from "../contexts/socketContext";
-import { createGroupList } from "../interfaces/interfaces";
-import UserImage from "./userImage";
+import { useSocketContext } from "../../contexts/socketContext";
+import { createGroupList } from "../../interfaces/interfaces";
+import UserImage from "../common/userImage";
 import axios from "axios";
 
 export const SelectGroupChannel: React.FC<{

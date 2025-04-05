@@ -3,12 +3,10 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
-import { useState } from "react";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import {
   Checkbox,
   IconButton,
-  Input,
   List,
   ListItem,
   ListItemButton,
@@ -17,7 +15,10 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { formatFileSize } from "../utils/formatFileSize";
+import { formatFileSize } from "../../utils/formatFileSize";
+import { useSendMessage } from "../../services/sendMessage";
+import { useChatFormContext } from "@/app/contexts/chatFormContext";
+import { useFilesContext } from "@/app/contexts/filesContext";
 
 const style = {
   position: "absolute",
@@ -32,33 +33,23 @@ const style = {
   p: 4,
 };
 
-export default function SelectFiles({
-  files,
-  text,
-  onDeleteFile,
-  onClose,
-  onTextChange,
-  onFileChange,
-  onSend,
-  onFileTypeChange,
-}: {
-  files: { file: File; saveAsMedia: boolean }[];
-  text: string;
-  onDeleteFile: (index: number) => void;
-  onClose: () => void;
-  onTextChange: (text: string) => void;
-  onFileChange: (
-    event: React.ChangeEvent<HTMLInputElement>,
-    saveAsMedia?: boolean
-  ) => void;
-  onSend: () => Promise<void>;
-  onFileTypeChange: (index: number) => void;
-}) {
+export default function SelectFiles({ roomId }: { roomId: string }) {
+  const { messageText, handleSetText } = useChatFormContext();
+  const handleSendMessage = useSendMessage();
+
+  const {
+    files,
+    handleCloseWindow,
+    handleFileChange,
+    handleFileTypeChange,
+    handleRemoveFile,
+  } = useFilesContext();
+
   return (
     <div>
       <Modal
         open
-        onClose={onClose}
+        onClose={handleCloseWindow}
         aria-labelledby="modal-title"
         aria-describedby="modal-description"
       >
@@ -78,7 +69,7 @@ export default function SelectFiles({
               Select Files
             </Typography>
             <IconButton
-              onClick={onClose}
+              onClick={handleCloseWindow}
               sx={{ color: "var(--color-text-default)" }}
             >
               <CloseIcon />
@@ -120,12 +111,12 @@ export default function SelectFiles({
                       <Checkbox
                         checked={file.saveAsMedia}
                         onChange={(e) => {
-                          onFileTypeChange(index);
+                          handleFileTypeChange(index);
                         }}
                       />
                     </div>
                   ) : null}
-                  <IconButton onClick={() => onDeleteFile(index)}>
+                  <IconButton onClick={() => handleRemoveFile(index)}>
                     <DeleteIcon sx={{ color: "var(--color-text-default)" }} />
                   </IconButton>
                 </ListItemButton>
@@ -138,7 +129,7 @@ export default function SelectFiles({
               id="file-upload"
               multiple
               style={{ display: "none" }}
-              onChange={onFileChange}
+              onChange={handleFileChange}
             />
             <label htmlFor="file-upload">Add</label>
           </Button>
@@ -146,8 +137,8 @@ export default function SelectFiles({
             fullWidth
             variant="outlined"
             placeholder="Message"
-            value={text}
-            onChange={(e) => onTextChange(e.target.value)}
+            value={messageText}
+            onChange={(e) => handleSetText(e.target.value)}
             margin="normal"
             sx={{
               color: "var(--color-text-default) !important",
@@ -179,15 +170,15 @@ export default function SelectFiles({
               marginTop: 16,
             }}
           >
-            <Button variant="outlined" onClick={onClose}>
+            <Button variant="outlined" onClick={handleCloseWindow}>
               Cancel
             </Button>
             <Button
               variant="contained"
               color="primary"
               onClick={() => {
-                onClose();
-                onSend();
+                handleCloseWindow();
+                handleSendMessage(roomId);
               }}
             >
               Send
