@@ -75,3 +75,16 @@ p {
     color-scheme: dark;
   }
 }
+
+.BackgroundColor {
+  background-color: var(--bg-color-text-default);
+}
+
+.TextColor {
+  color: var(--color-text-default);
+}
+
+.DefaultColors {
+  background-color: var(--bg-color-text-default);
+  color: var(--color-text-default);
+}

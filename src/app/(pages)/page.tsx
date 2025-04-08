@@ -8,6 +8,8 @@ import { SocketProvider } from "../contexts/socketContext";
 import { ChatFormProvider } from "../contexts/chatFormContext";
 import { ChatSocketProvider } from "../contexts/chatSocketContext";
 import { FilesProvider } from "../contexts/filesContext";
+import LoadingPage from "../components/public/loading";
+import { MobileProvider } from "../contexts/mobileContext";
 
 export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -20,7 +22,6 @@ export default function Home() {
         });
         setIsAuthenticated(response.data ? false : true);
       } catch (error) {
-        console.error("Error checking authentication:", error);
         setIsAuthenticated(false);
       }
     };
@@ -30,7 +31,7 @@ export default function Home() {
 
   if (isAuthenticated === null) {
     // You can render a loading state here if needed
-    return <div>Loading...</div>;
+    return <LoadingPage />;
   }
 
   if (isAuthenticated) {
@@ -39,7 +40,9 @@ export default function Home() {
         <ChatFormProvider>
           <ChatSocketProvider>
             <FilesProvider>
-              <App />
+              <MobileProvider>
+                <App />
+              </MobileProvider>
             </FilesProvider>
           </ChatSocketProvider>
         </ChatFormProvider>

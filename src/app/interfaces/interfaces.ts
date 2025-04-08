@@ -87,7 +87,7 @@ export interface attachment {
   fileURL: string,
   fileName: string,
   saveAsMedia?: boolean,
-  fileSize?: number,
+  fileSize?: number | string,
   fileBase64Blur?: string
 }
 

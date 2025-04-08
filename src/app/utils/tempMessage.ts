@@ -3,7 +3,7 @@ import { AddTempMessage, MessageStatus, message } from "../interfaces/interfaces
 import { v4 as uuid } from "uuid";
 
 export const useAddTempMessage = () => {
-	const { handleSetMessages } = useChatSocketContext(); // Move the hook call here
+	const { handleSetNewMessage } = useChatSocketContext(); // Move the hook call here
 
 	const handleAddTempMessage = ({ text, attachments }: AddTempMessage) => {
 		const tempId = uuid();
@@ -17,7 +17,7 @@ export const useAddTempMessage = () => {
 			status: MessageStatus.Sending,
 		};
 
-		handleSetMessages(tempMes);
+		handleSetNewMessage(tempMes);
 		return tempId;
 	}
 	return handleAddTempMessage;

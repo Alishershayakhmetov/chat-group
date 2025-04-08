@@ -104,6 +104,9 @@ export const Message = ({
           alt="profile image"
           width={32}
           height={32}
+          style={{
+            borderRadius: "50%",
+          }}
         />
       </div>
       <div className={styles.rightBox}>

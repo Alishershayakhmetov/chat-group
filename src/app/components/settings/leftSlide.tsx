@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import {
   Group as GroupIcon,
@@ -14,6 +14,8 @@ import styles from "../../styles/leftSlide.module.css";
 import useDarkMode from "../../hooks/useDarkMode";
 import { useSocketContext } from "../../contexts/socketContext";
 import { Typography } from "@mui/material";
+import { Data } from "emoji-mart";
+import { EditProfile } from "./editProfile";
 
 const label = { inputProps: { "aria-label": "Dark Mode Switch" } };
 
@@ -24,7 +26,23 @@ const LeftSlideBox: React.FC<{
 }> = ({ isVisible, onClose, onSelect }) => {
   const { socket } = useSocketContext();
   const [isDarkMode, setIsDarkMode] = useDarkMode();
+  const [userData, setUserData] = useState({
+    imgURL: "/user-solid.svg",
+    name: "",
+    lastName: "",
+  });
+  const [showEditProfile, setShowEditProfile] = useState(false);
 
+  useEffect(() => {
+    socket.on("userData", (data) => {
+      setUserData(data);
+    });
+
+    return () => {
+      socket.off("userData");
+    };
+  }, [socket]);
+  console.log(userData);
   const handleDarkModeToggle = () => {
     setIsDarkMode(!isDarkMode);
     localStorage.setItem("isDarkMode", JSON.stringify(!isDarkMode));
@@ -33,11 +51,6 @@ const LeftSlideBox: React.FC<{
     } else {
       document.body.classList.remove("dark-mode");
     }
-  };
-
-  const data = {
-    imgURL: "/favicon.png",
-    userName: "User Name",
   };
 
   return (
@@ -52,14 +65,32 @@ const LeftSlideBox: React.FC<{
           sx={{ fontSize: 40 }}
           onClick={onClose}
         />
-        <Image
-          src={data.imgURL}
-          alt="Profile Image"
-          width={56}
-          height={56}
-          className={styles.profileImage}
-        />
-        <p>{data.userName}</p>
+        <div
+          onClick={() => setShowEditProfile(true)}
+          style={{ cursor: "pointer" }}
+        >
+          <Image
+            src={
+              !userData.imgURL || userData.imgURL === ""
+                ? "/user-solid.svg"
+                : userData.imgURL
+            }
+            alt="Profile Image"
+            width={56}
+            height={56}
+            className={styles.profileImage}
+          />
+          <Typography>
+            {userData.name} {userData.lastName}
+          </Typography>
+          {showEditProfile && (
+            <EditProfile
+              currentUser={userData}
+              onClose={() => setShowEditProfile(false)}
+              open={showEditProfile}
+            />
+          )}
+        </div>
       </header>
       <div className={styles.menuBox}>
         <MenuChoose

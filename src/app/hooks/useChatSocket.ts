@@ -82,9 +82,17 @@ export const useChatSocket = () => {
     };
   }, [socket]);
 
-  const handleSetMessages = (newMessage: message) => {
+  const handleSetNewMessage = (newMessage: message) => {
     setMessages((prev) => [...prev, newMessage]);
   }
 
-  return { chats, searchResults, roomData, messages, handleSetMessages };
+  const handleSetOldMessages = (oldMessages: message[]) => {
+    setMessages((prev) => {
+      const existingIds = new Set(prev.map(msg => msg.id));
+      const filteredOldMessages = oldMessages.filter(msg => !existingIds.has(msg.id));
+      return [...filteredOldMessages, ...prev];
+    });
+  };  
+
+  return { chats, searchResults, roomData, messages, handleSetNewMessage, handleSetOldMessages };
 };

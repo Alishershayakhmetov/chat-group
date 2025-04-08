@@ -106,12 +106,85 @@
     background-color: hsla(196, 23%, 51%, 0.4);
   }  
 
-@media (max-width: 768px) {
+@media (max-width: 812px) {
     .leftSlide {
-      width: 35%;
+      width: 100%;
     }
   
     .rightSlide {
-      width: 65%;
+      width: 100%;
     }
+}
+
+
+
+
+.backButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-right: 15px;
+  color: var(--color-text-default);
+}
+/* Mobile styles */
+.mobileContainer {
+  width: 100%;
+  height: 100vh;
+}
+
+.mobileWrapper {
+  display: flex;
+  width: 200%;
+  height: 100%;
+  transition: transform 0.3s ease-in-out;
+}
+
+.mobileWrapper .leftSlide,
+.mobileWrapper .rightSlide {
+  width: 50%;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.mobileWrapper .leftSlide {
+  background-color: var(--bg-color-chat-list-box);
+}
+
+.mobileWrapper .rightSlide {
+  background-image: url("/background-chat-612x612.jpg");
+  position: relative;
+}
+
+.mobileWrapper .rightSlide::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--bg-color-chat-shadow);
+  z-index: 1;
+}
+
+.showLeft {
+  transform: translateX(0);
+}
+
+.showRight {
+  transform: translateX(-50%);
+}
+
+@media (min-width: 813px) {
+  .leftSlide {
+    width: 30%;
   }
+
+  .rightSlide {
+    width: 70%;
+  }
+}
+
+.rightSlide > * {
+  position: relative;
+  z-index: 2;
+}

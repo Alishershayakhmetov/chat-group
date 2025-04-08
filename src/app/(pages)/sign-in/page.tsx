@@ -6,7 +6,12 @@ export default function SignUp() {
   return (
     <div className={styles.container}>
       <img src="/favicon.png" width={50} />
-      <h1 className={styles.signUpText}>Sign In</h1>
+      <h1
+        className={styles.signUpText}
+        style={{ color: "var(--color-text-default)" }}
+      >
+        Sign In
+      </h1>
       <SignInForm />
       <SignInButton />
     </div>

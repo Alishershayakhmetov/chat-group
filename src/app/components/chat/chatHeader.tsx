@@ -6,6 +6,8 @@ import ChatSettingBox from "./chatSettingBox";
 import { Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { formatLastActive } from "../../utils/formatLastActive";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useMobileContext } from "@/app/contexts/mobileContext";
 
 export const ChatHeader = ({
   data,
@@ -15,6 +17,8 @@ export const ChatHeader = ({
   userStatus: UserStatus;
 }) => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
+  const { isMobile, handleSetShowRightSlide } = useMobileContext();
 
   const chatStatus =
     data && data.roomType === "chat"
@@ -32,6 +36,17 @@ export const ChatHeader = ({
     <>
       <div className={styles.chatHeaderBox} onClick={handleOpenSettings}>
         <div className={styles.chatNameBox}>
+          {isMobile && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleSetShowRightSlide(false);
+              }}
+              className={styles.backButton}
+            >
+              <ArrowBackIcon />
+            </button>
+          )}
           <UserImage className={styles.image} src={data && data.imgURL} />
           <div className={styles.chatNameInfoBox}>
             <Typography

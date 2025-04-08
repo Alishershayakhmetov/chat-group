@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef } from "react";
-import styles from "../styles/register.module.css";
+import styles from "../../styles/register.module.css";
 import TextField from "@mui/material/TextField";
 import { Button, Link } from "@mui/material";
 import axios from "axios";
@@ -172,7 +172,7 @@ export default function SignUpForm() {
       </Button>
       {!isSubmitted && (
         <>
-          <p>
+          <p style={{ color: "var(--color-text-default)" }}>
             Already Have an Account?{" "}
             <span>
               <Link href="/sign-in">Sign In</Link>

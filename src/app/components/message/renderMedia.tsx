@@ -3,6 +3,8 @@ import { Box, ImageList, ImageListItem, styled } from "@mui/material";
 import { useState } from "react";
 import PhotoViewer from "./viewer";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
+import { useMobileContext } from "@/app/contexts/mobileContext";
+import Image from "next/image";
 
 const StyledImageList = styled(ImageList)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
@@ -46,6 +48,13 @@ export const RenderMedia = ({ attachments }: { attachments: attachment[] }) => {
   const [photoViewerOpen, setPhotoViewerOpen] = useState(false);
   const [photoViewerIndex, setPhotoViewerIndex] = useState(0);
 
+  const {
+    isMobile,
+    handleSetIsMobile,
+    showRightSlide,
+    handleSetShowRightSlide,
+  } = useMobileContext();
+
   if (attachments === undefined || !attachments.length) return null;
 
   const getLayoutConfig = (count: number) => {
@@ -72,7 +81,7 @@ export const RenderMedia = ({ attachments }: { attachments: attachment[] }) => {
         // Special layout: 1 large on left, 4 small stacked on right
         return {
           cols: 6, // Using 6 columns for more precise control
-          rowHeight: [240, 120, 120],
+          rowHeight: isMobile ? [180, 90, 90] : [240, 120, 120],
           layout: "3fr 1fr 1fr 1fr", // 3/6 for first column, 1/6 for others
           structure: [
             {
@@ -188,7 +197,7 @@ export const RenderMedia = ({ attachments }: { attachments: attachment[] }) => {
         // Special layout: first 2 items bigger
         return {
           cols: 4,
-          rowHeight: [160, 160, 100, 100], // First two rows taller
+          rowHeight: isMobile ? [100, 100, 100, 100] : [160, 160, 100, 100], // First two rows taller
           layout: "1fr 1fr 1fr 1fr",
           structure: [
             { colSpan: 2, rowSpan: 2 }, // Big item 1

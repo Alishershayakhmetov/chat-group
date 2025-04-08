@@ -1,6 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
-import styles from "../styles/register.module.css";
+import styles from "../../styles/register.module.css";
 import TextField from "@mui/material/TextField";
 import { Button, Link } from "@mui/material";
 import OrDivider from "./orDivider";
@@ -99,7 +99,7 @@ export default function SignUpForm() {
       <Button variant="contained" size="large" type="submit">
         Sign In
       </Button>
-      <p>
+      <p style={{ color: "var(--color-text-default)" }}>
         Don't Have an Account?{" "}
         <span>
           <Link href="/sign-up">Sign Up</Link>
