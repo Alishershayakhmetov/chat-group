@@ -5,7 +5,7 @@ export interface MenuChooseProps {
 
 export interface chatLastMessageData {
   roomId: string
-  chatImgURL: string,
+  chatImageURL: string,
   chatName: string,
   lastMessageTime?: string,
   messageUserName?: string,

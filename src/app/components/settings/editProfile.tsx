@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { useSocketContext } from "../../contexts/socketContext";
 import axios from "axios";
+import { useDarkModeContext } from "@/app/contexts/darkModeContext";
 
 interface UserProfile {
   name: string;
@@ -23,6 +24,37 @@ interface Props {
   open: boolean;
 }
 
+const whiteTextFieldStyles = {
+  "& .MuiInputBase-input": {
+    color: "var(--color-text-default)",
+  },
+  "& .MuiOutlinedInput-root.Mui-focused": {
+    "& fieldset": {
+      borderColor: "var(--color-text-default)",
+    },
+  },
+  "& .MuiInputLabel-root.Mui-focused": {
+    color: "var(--color-text-default)",
+  },
+  "& .MuiOutlinedInput-root": {
+    "& fieldset": {
+      borderColor: "var(--color-text-default)", // Default border color
+    },
+    "&:hover fieldset": {
+      borderColor: "var(--color-text-default)", // Hover border color
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "var(--color-text-default)", // Focused border color
+    },
+  },
+  "& .MuiInputLabel-root": {
+    color: "var(--color-text-default)", // Default label color
+    "&.Mui-focused": {
+      color: "var(--color-text-default)", // Focused label color
+    },
+  },
+};
+
 export const EditProfile: React.FC<Props> = ({
   currentUser,
   onClose,
@@ -34,6 +66,7 @@ export const EditProfile: React.FC<Props> = ({
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isDarkMode] = useDarkModeContext();
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.[0]) {
@@ -99,7 +132,7 @@ export const EditProfile: React.FC<Props> = ({
   };
 
   return (
-    <Modal open={open} onClose={onClose} className="DefaultColors">
+    <Modal open={open} onClose={onClose}>
       <Box
         component="form"
         onSubmit={handleSubmit}
@@ -109,11 +142,11 @@ export const EditProfile: React.FC<Props> = ({
           left: "50%",
           transform: "translate(-50%, -50%)",
           width: 400,
-          bgcolor: "background.paper",
           borderRadius: 3,
           boxShadow: 24,
           p: 4,
         }}
+        className="DefaultColors"
       >
         <Typography variant="h6" mb={2} className="DefaultColors">
           Edit Profile
@@ -144,6 +177,7 @@ export const EditProfile: React.FC<Props> = ({
           onChange={(e) => setName(e.target.value)}
           required
           className="DefaultColors"
+          sx={isDarkMode ? whiteTextFieldStyles : {}}
         />
         <TextField
           label="Last Name"
@@ -153,6 +187,7 @@ export const EditProfile: React.FC<Props> = ({
           onChange={(e) => setLastName(e.target.value)}
           required
           className="DefaultColors"
+          sx={isDarkMode ? whiteTextFieldStyles : {}}
         />
 
         <Box display="flex" justifyContent="flex-end" mt={3}>

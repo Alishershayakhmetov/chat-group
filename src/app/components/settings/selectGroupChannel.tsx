@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Snackbar, Alert } from "@mui/material";
+import { Modal, Snackbar, Alert, Button } from "@mui/material";
 import styles from "../../styles/leftSlide.module.css";
 import { Close } from "@mui/icons-material";
 import { useSocketContext } from "../../contexts/socketContext";
@@ -81,11 +81,11 @@ export const SelectGroupChannel: React.FC<{
     let uploadedImage;
     if (imagePreview && imagePreview != "/picture-697.svg") {
       const parts = selectedImage!.name.split(".");
-      const extension = [parts.length > 1 ? parts.pop() : ""];
+      const extensions = [parts.length > 1 ? parts.pop() : ""];
 
       // Request signed upload URLs for files
       const result = await axios.post("http://localhost:3005/upload", {
-        extension,
+        extensions,
       });
 
       const urls: { url: string; key: string }[] = result.data.urls;
@@ -156,6 +156,7 @@ export const SelectGroupChannel: React.FC<{
               fontSize: "20px",
               fontWeight: "bold",
               textAlign: "center",
+              color: "var(--color-text-default)",
             }}
           >
             Create a {entity === "group" ? "Group" : "Channel"}
@@ -175,7 +176,7 @@ export const SelectGroupChannel: React.FC<{
               placeholder={`Enter ${
                 entity === "group" ? "Group" : "Channel"
               } Title`}
-              className={styles.titleInput}
+              className={styles.titleInput + " DefaultColors"}
             />
             <Snackbar
               open={snackbar.open}
@@ -212,9 +213,13 @@ export const SelectGroupChannel: React.FC<{
         ) : (
           <ChannelParamList />
         )}
-        <button onClick={handleCreate} className={styles.createButton}>
+        <Button
+          variant="contained"
+          onClick={handleCreate}
+          className={styles.createButton}
+        >
           Create {entity === "group" ? "Group" : "Channel"}
-        </button>
+        </Button>
       </div>
     </Modal>
   );

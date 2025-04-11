@@ -36,9 +36,7 @@ export const ChatForm = ({
   const scrollHeightRef = useRef(0);
 
   const showMessageInput =
-    roomData.roomType === "chat" ||
-    roomData.roomType === "group" ||
-    (roomData.roomType === "channel" && isMember);
+    roomData.roomType === "chat" || roomData.roomType === "group";
 
   const isInitialMount = useRef(true);
   const shouldScrollToBottom = useRef(false);
@@ -178,11 +176,44 @@ export const ChatForm = ({
     };
   };
 
+  const renderInput = () => {
+    if (showMessageInput)
+      return <MessageInput roomId={roomData.id} messages={messages} />;
+    else if (roomData.roomType === "channel" && !isMember)
+      return (
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={
+            isSubscribing ? (
+              <CircularProgress size={20} />
+            ) : (
+              <AddCircleOutlineIcon />
+            )
+          }
+          onClick={() => handleSubscribe(roomData.id)}
+          disabled={isSubscribing}
+          sx={{
+            padding: "10px 20px",
+            fontSize: "16px",
+            textTransform: "none",
+            borderRadius: "8px",
+          }}
+        >
+          {isSubscribing ? "Subscribing..." : "Subscribe"}
+        </Button>
+      );
+  };
+
   return (
     <div
       className={styles.contentBox}
       style={{
-        height: isMessageReply ? "calc(100vh - 118px)" : "calc(100vh - 68px)",
+        height: isMessageReply
+          ? `calc(100vh - ${
+              roomData.roomType === "channel" ? 118 - 40 : 118
+            }px)`
+          : `calc(100vh - ${roomData.roomType === "channel" ? 68 - 40 : 68}px)`,
       }}
     >
       <ChatHeader data={roomData} userStatus={userStatus} />
@@ -210,31 +241,7 @@ export const ChatForm = ({
         })}
         <div ref={bottomRef} />
       </div>
-      {showMessageInput ? (
-        <MessageInput roomId={roomData.id} messages={messages} />
-      ) : (
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={
-            isSubscribing ? (
-              <CircularProgress size={20} />
-            ) : (
-              <AddCircleOutlineIcon />
-            )
-          }
-          onClick={() => handleSubscribe(roomData.id)}
-          disabled={isSubscribing}
-          sx={{
-            padding: "10px 20px",
-            fontSize: "16px",
-            textTransform: "none",
-            borderRadius: "8px",
-          }}
-        >
-          {isSubscribing ? "Subscribing..." : "Subscribe"}
-        </Button>
-      )}
+      {renderInput()}
     </div>
   );
 };

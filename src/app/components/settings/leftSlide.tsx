@@ -11,11 +11,10 @@ import {
 import Switch from "@mui/material/Switch";
 import { SelectGroupChannel } from "./selectGroupChannel";
 import styles from "../../styles/leftSlide.module.css";
-import useDarkMode from "../../hooks/useDarkMode";
 import { useSocketContext } from "../../contexts/socketContext";
 import { Typography } from "@mui/material";
-import { Data } from "emoji-mart";
 import { EditProfile } from "./editProfile";
+import { useDarkModeContext } from "@/app/contexts/darkModeContext";
 
 const label = { inputProps: { "aria-label": "Dark Mode Switch" } };
 
@@ -25,7 +24,7 @@ const LeftSlideBox: React.FC<{
   onSelect: (entity: string) => void;
 }> = ({ isVisible, onClose, onSelect }) => {
   const { socket } = useSocketContext();
-  const [isDarkMode, setIsDarkMode] = useDarkMode();
+  const [isDarkMode, setIsDarkMode] = useDarkModeContext();
   const [userData, setUserData] = useState({
     imgURL: "/user-solid.svg",
     name: "",

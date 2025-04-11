@@ -159,7 +159,7 @@
   border-radius: 8px;
   font-size: 16px;
   text-align: center;
-  background-color: #f9f9f9;
+  background-color: var(--bg-color-text-default);
   outline: none;
   transition: border 0.2s;
 }
@@ -209,6 +209,8 @@
   border-radius: 4px;
   border: 1px solid #ccc;
   margin-top: 4px;
+  background-color: var(--bg-color-text-default);
+  color: var(--color-text-default);
 }
 
 @media (max-width: 768px) {
@@ -230,7 +232,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: var(--background);
+  background-color: var(--background);
+  color: var(--color-text-default);
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);

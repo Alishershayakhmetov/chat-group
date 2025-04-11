@@ -8,6 +8,7 @@ import {
 import styles from "../styles/chat.module.css";
 import { FormatDate } from "../utils/formatDate";
 import UserImage from "./common/userImage";
+import { useChatSearchContext } from "../contexts/chatSearchContext";
 
 export const ChatSlide = ({
   data,
@@ -15,11 +16,15 @@ export const ChatSlide = ({
   data: chatLastMessageData | searchedChats;
 }) => {
   const { socket } = useSocketContext();
+  const { setSearchInput } = useChatSearchContext();
+
+  console.log(data);
   if (isObjectSearchedChats(data)) {
     return (
       <div
         className={styles.slide}
         onClick={() => {
+          setSearchInput("");
           socket.emit("enterChat", data.id);
         }}
       >
@@ -57,7 +62,7 @@ export const ChatSlide = ({
         socket.emit("enterChat", data.roomId);
       }}
     >
-      <UserImage src={data.chatImgURL} className={styles.image} />
+      <UserImage src={data.chatImageURL} className={styles.image} />
       <div className={styles.infoBox}>
         <div className={styles.info}>
           <p>{data.chatName}</p>

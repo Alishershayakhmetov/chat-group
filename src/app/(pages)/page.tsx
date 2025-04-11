@@ -10,6 +10,8 @@ import { ChatSocketProvider } from "../contexts/chatSocketContext";
 import { FilesProvider } from "../contexts/filesContext";
 import LoadingPage from "../components/public/loading";
 import { MobileProvider } from "../contexts/mobileContext";
+import { ChatSearchProvider } from "../contexts/chatSearchContext";
+import { DarkModeProvider } from "../contexts/darkModeContext";
 
 export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -17,7 +19,7 @@ export default function Home() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await axios.get(URLS.chechAuth, {
+        const response = await axios.get(URLS.checkAuth, {
           withCredentials: true,
         });
         setIsAuthenticated(response.data ? false : true);
@@ -30,7 +32,6 @@ export default function Home() {
   }, []);
 
   if (isAuthenticated === null) {
-    // You can render a loading state here if needed
     return <LoadingPage />;
   }
 
@@ -41,7 +42,11 @@ export default function Home() {
           <ChatSocketProvider>
             <FilesProvider>
               <MobileProvider>
-                <App />
+                <ChatSearchProvider>
+                  <DarkModeProvider>
+                    <App />
+                  </DarkModeProvider>
+                </ChatSearchProvider>
               </MobileProvider>
             </FilesProvider>
           </ChatSocketProvider>

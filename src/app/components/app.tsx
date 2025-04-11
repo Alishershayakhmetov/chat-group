@@ -3,19 +3,18 @@ import { TextField } from "@mui/material";
 import styles from "../styles/app.module.css";
 import { ChatSlide } from "./chatSlide";
 import { LeftSlide } from "./settings/leftSlide";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { chatLastMessageData, searchedChats } from "../interfaces/interfaces";
 import { ChatForm } from "./chat/chatForm";
-import useDarkMode from "../hooks/useDarkMode";
-import { useChatSearch } from "../hooks/useChatSearch";
 import { useChatSocketContext } from "../contexts/chatSocketContext";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useMobileContext } from "../contexts/mobileContext";
+import { useChatSearchContext } from "../contexts/chatSearchContext";
+import { useDarkModeContext } from "../contexts/darkModeContext";
 
 export const App = () => {
   const { chats, searchResults, roomData, messages } = useChatSocketContext();
-  const { searchInput, handleSearchInput } = useChatSearch();
-  const [isDarkMode] = useDarkMode();
+  const { searchInput, handleSearchInput } = useChatSearchContext();
+  const [isDarkMode] = useDarkModeContext();
 
   const {
     isMobile,

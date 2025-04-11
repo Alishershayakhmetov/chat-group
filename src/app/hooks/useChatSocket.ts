@@ -11,7 +11,14 @@ export const useChatSocket = () => {
   const [messages, setMessages] = useState<message[]>([]);
 
   useEffect(() => {
-    socket.on("chats", setChats);
+    socket.on("chats", (chats: chatLastMessageData[]) => {
+      setChats(chats.sort((a, b) => {
+        // Convert ISO strings to timestamps for comparison
+        const timeA = a.lastMessageTime ? new Date(a.lastMessageTime).getTime() : 0;
+        const timeB = b.lastMessageTime ? new Date(b.lastMessageTime).getTime() : 0;
+        return timeB - timeA;
+      }));
+    });
     socket.on("searchResult", setSearchResults);
     socket.on("enterChat", (data: { roomData: roomData; messages: message[] }) => {
       setRoomData(data.roomData);
@@ -55,19 +62,29 @@ export const useChatSocket = () => {
       );
     });
 		socket.on("newMessageNotification", (message: NewMessageNotification) => {
-			setChats((prevChats) =>
-				prevChats.map((chat) =>
-					chat.roomId === message.roomId
-						? {
-							...chat,
-							messageUserName: message.userName || "noName",
-							messageText: message.text || "",
-							lastMessageTime: message.lastMessageTime.toString(),
-						}
-					: chat
-				)
-			);
-		})
+      setChats((prevChats) => {
+        // Find the index of the chat that received the new message
+        const chatIndex = prevChats.findIndex(chat => chat.roomId === message.roomId);
+        
+        // If chat not found, return existing chats
+        if (chatIndex === -1) return prevChats;
+        
+        // Create a new array without the chat that's being moved
+        const otherChats = prevChats.filter((_, index) => index !== chatIndex);
+        
+        // Update the chat with new message data
+        const updatedChat: chatLastMessageData = {
+          ...prevChats[chatIndex],
+          messageUserName: message.userName || "noName",
+          messageText: message.text || "",
+          lastMessageTime: message.lastMessageTime,
+          numberOfUnreadMessages: (prevChats[chatIndex].numberOfUnreadMessages || 0) + 1
+        };
+        
+        // Return the updated chat first, followed by other chats
+        return [updatedChat, ...otherChats];
+      });
+    });
 
     return () => {
       socket.off("chats");

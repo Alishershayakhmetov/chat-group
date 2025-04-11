@@ -6,7 +6,9 @@ const ENV = {
     AUTH_GOOGLE_CALLBACKURL_TEST: process.env.AUTH_GOOGLE_CALLBACKURL_TEST,
     BASE_URL: process.env.WEB_URL,
     AUTH_URL: process.env.NEXT_PUBLIC_BASE_URL,
-    SOCKET_URL: process.env.NEXT_PUBLIC_SOCKET_IO_URL!
+    SOCKET_URL: process.env.NEXT_PUBLIC_SOCKET_IO_URL!,
+
+    API_GATEWAY_URL: process.env.API_GATEWAY!
 }
 
 export default ENV;

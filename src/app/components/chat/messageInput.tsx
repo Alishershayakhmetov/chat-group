@@ -11,11 +11,13 @@ import SendIcon from "@mui/icons-material/Send";
 import { message } from "../../interfaces/interfaces";
 import SelectFiles from "./selectFiles";
 import Picker from "@emoji-mart/react";
-import data from "@emoji-mart/data/sets/15/apple.json";
+// import data from "@emoji-mart/data/sets/15/apple.json";
+import data from "@emoji-mart/data";
 import { Close as CloseIcon, EditNote, Reply } from "@mui/icons-material";
 import { useSendMessage } from "../../services/sendMessage";
 import { useChatFormContext } from "@/app/contexts/chatFormContext";
 import { useFilesContext } from "@/app/contexts/filesContext";
+import { useDarkModeContext } from "@/app/contexts/darkModeContext";
 
 const ariaLabel = { "aria-label": "Type message box" };
 
@@ -39,6 +41,7 @@ export const MessageInput = ({
   } = useChatFormContext();
 
   const { files, showFileWindow, handleFileChange } = useFilesContext();
+  const [isDarkMode] = useDarkModeContext();
 
   const toggleEmojiPicker = () => {
     setShowEmojiPicker(!showEmojiPicker);
@@ -113,9 +116,9 @@ export const MessageInput = ({
                 <Picker
                   data={data}
                   onEmojiSelect={handleEmojiSelect}
-                  theme="light"
+                  theme={isDarkMode ? "dark" : "light"}
                   previewPosition="none"
-                  set="apple" // This forces Apple-style emojis
+                  // set="apple"
                   perLine={8}
                   emojiSize={24}
                   emojiButtonColors={[

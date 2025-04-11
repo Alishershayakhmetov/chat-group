@@ -4,5 +4,5 @@ export interface NewMessageNotification {
 	userId: string;
 	text: string | null;
 	isAttachment: boolean;
-	lastMessageTime: String;
+	lastMessageTime: string;
 }

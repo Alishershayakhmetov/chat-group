@@ -17,5 +17,5 @@ export const useChatSearch = () => {
     }, 300);
   };
 
-  return { searchInput, handleSearchInput };
+  return { searchInput, handleSearchInput, setSearchInput };
 };
