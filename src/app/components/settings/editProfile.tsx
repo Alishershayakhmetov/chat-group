@@ -11,6 +11,7 @@ import {
 import { useSocketContext } from "../../contexts/socketContext";
 import axios from "axios";
 import { useDarkModeContext } from "@/app/contexts/darkModeContext";
+import URLS from "@/app/utils/urls";
 
 interface UserProfile {
   name: string;
@@ -81,7 +82,7 @@ export const EditProfile: React.FC<Props> = ({
       const parts = file.name.split(".");
       const extension = parts.length > 1 ? parts.pop() : "";
 
-      const result = await axios.post("http://localhost:3005/upload", {
+      const result = await axios.post(URLS.uploadFileUrl, {
         extensions: [extension],
       });
 

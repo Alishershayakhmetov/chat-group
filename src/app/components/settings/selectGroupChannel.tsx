@@ -6,6 +6,7 @@ import { useSocketContext } from "../../contexts/socketContext";
 import { createGroupList } from "../../interfaces/interfaces";
 import UserImage from "../common/userImage";
 import axios from "axios";
+import URLS from "@/app/utils/urls";
 
 export const SelectGroupChannel: React.FC<{
   entity: string;
@@ -84,7 +85,7 @@ export const SelectGroupChannel: React.FC<{
       const extensions = [parts.length > 1 ? parts.pop() : ""];
 
       // Request signed upload URLs for files
-      const result = await axios.post("http://localhost:3005/upload", {
+      const result = await axios.post(URLS.uploadFileUrl, {
         extensions,
       });
 

@@ -6,6 +6,7 @@ import { Button, Link } from "@mui/material";
 import OrDivider from "./orDivider";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import URLS from "@/app/utils/urls";
 
 export default function SignUpForm() {
   const [email, setEmail] = useState("");
@@ -21,7 +22,7 @@ export default function SignUpForm() {
     if (!email || !password) return;
     try {
       const response = await axios.post(
-        "http://localhost:3002/api/login",
+        URLS.logIn,
         {
           email,
           password,

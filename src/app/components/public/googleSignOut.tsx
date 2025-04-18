@@ -2,12 +2,11 @@
 import { Button } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
 import axios from "axios";
+import URLS from "@/app/utils/urls";
 
 export function SignOutButton() {
   const handleSubmit = () => {
-    const result = axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL!}/api/auth/google`
-    );
+    const result = axios.get(URLS.signOut);
   };
   return (
     <>

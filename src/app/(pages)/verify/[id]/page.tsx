@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { CircularProgress, Typography } from "@mui/material";
+import URLS from "@/app/utils/urls";
 
 export default function VerifyEmail() {
   const router = useRouter();
@@ -15,10 +16,7 @@ export default function VerifyEmail() {
       if (!id) return;
 
       try {
-        const response = await axios.post(
-          "http://localhost:3002/api/verify-email",
-          { id }
-        );
+        const response = await axios.post(URLS.verifyEmail, { id });
 
         if (response.status === 200) {
           setVerificationStatus(

@@ -6,6 +6,7 @@ import { Button, Link } from "@mui/material";
 import axios from "axios";
 import OrDivider from "./orDivider";
 import { useRouter } from "next/navigation";
+import URLS from "@/app/utils/urls";
 
 export default function SignUpForm() {
   const router = useRouter(); // Use the useRouter hook
@@ -33,14 +34,11 @@ export default function SignUpForm() {
 
       // Submit initial form data
       try {
-        const response = await axios.post(
-          "http://localhost:3002/api/register-temp",
-          {
-            fullName,
-            email,
-            password,
-          }
-        );
+        const response = await axios.post(URLS.registerTemp, {
+          fullName,
+          email,
+          password,
+        });
 
         if (response.status === 200) {
           console.log("Verification code sent to email.");
@@ -62,13 +60,10 @@ export default function SignUpForm() {
 
       // Submit verification code
       try {
-        const response = await axios.post(
-          "http://localhost:3002/api/verify-email",
-          {
-            email,
-            code,
-          }
-        );
+        const response = await axios.post(URLS.verifyEmail, {
+          email,
+          code,
+        });
 
         if (response.status === 200) {
           console.log("User verified and registered successfully.");

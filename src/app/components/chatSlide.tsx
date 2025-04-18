@@ -18,7 +18,6 @@ export const ChatSlide = ({
   const { socket } = useSocketContext();
   const { setSearchInput } = useChatSearchContext();
 
-  console.log(data);
   if (isObjectSearchedChats(data)) {
     return (
       <div

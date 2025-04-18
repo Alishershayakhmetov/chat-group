@@ -18,27 +18,57 @@ export const useSendMessage = () => {
     handleSetMessageTextEmpty,
   } = useChatFormContext();
   const { files, handleFileEmpty } = useFilesContext();
-	const handleAddTempMessage = useAddTempMessage();
+  const handleAddTempMessage = useAddTempMessage();
 
   const handleSendMessage = async (roomId: string) => {
+    if (shouldAbortSend()) return;
+    if (handleMessageEdit()) return;
+
+    try {
+      const { tempId, attachments } = prepareTempMessage();
+      const { blurHashes, extensions } = await processFiles();
+      console.log(extensions);
+      let urls;
+      if (extensions.length !== 0) {
+        urls = await getUploadUrls(extensions);
+        await uploadFiles(urls);
+      }
+      sendCompleteMessage(roomId, tempId, urls, blurHashes);
+      resetForm();
+    } catch (error) {
+      handleSendError(error);
+    }
+  };
+
+  // Helper functions
+  const shouldAbortSend = () => {
     if (!messageText.trim() && files.length === 0) {
       alert("Cannot send an empty message.");
-      return;
+      return true;
     }
+    return false;
+  };
 
-    const text = messageText.trim();
-
+  const handleMessageEdit = () => {
     if (isMessageEdit && targetMessageId) {
       socket.emit("editMessage", {
         messageId: targetMessageId,
         editedText: messageText,
       });
-      handleSetIsMessageEditFalse();
-      handleSetTargetMessageIdUndefined();
-      handleSetMessageTextEmpty();
-      return;
+      resetEditState();
+      return true;
     }
+    return false;
+  };
 
+  const resetEditState = () => {
+    handleSetIsMessageEditFalse();
+    handleSetTargetMessageIdUndefined();
+    handleSetMessageTextEmpty();
+  };
+
+  const prepareTempMessage = () => {
+    const text = messageText.trim();
     const attachments = files.map((file) => ({
       fileName: file.file.name,
       saveAsMedia: file.saveAsMedia,
@@ -46,67 +76,86 @@ export const useSendMessage = () => {
       fileSize: file.file.size,
     }));
     const tempId = handleAddTempMessage({ text, attachments });
+    return { tempId, attachments };
+  };
 
-    try {
-      const extensions = files.map((file) => {
-        const parts = file.file.name.split(".");
-        return parts.length > 1 ? parts.pop() : "";
-      });
+  const processFiles = async () => {
+    const extensions = files.map((file) => file.file.name.split(".").pop() || "");
+    
+    const blurHashPromises = files.map((file) => 
+      file.file.type.startsWith("image/") && !file.saveAsMedia 
+        ? generateBase64Blur(file.file) 
+        : Promise.resolve("")
+    );
+    
+    const blurHashes = await Promise.all(blurHashPromises);
+    return { blurHashes, extensions };
+  };
 
-      const blurHashPromises = files.map((file, index) => {
-        const isImage = file.file.type.startsWith("image/");
-        if (isImage && !file.saveAsMedia) {
-          return generateBase64Blur(file.file);
+  const getUploadUrls = (extensions: string[]) => {
+    return new Promise<{ url: string; key: string }[]>((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        reject(new Error("Upload request timed out"));
+      }, 10000);
+
+      socket.emit("upload", { extensions }, (response: any) => {
+        clearTimeout(timeout);
+        
+        if (response?.error) {
+          reject(new Error(response.error));
+        } else if (response?.urls) {
+          resolve(response.urls);
+        } else {
+          reject(new Error("Invalid response format from server"));
         }
-        return Promise.resolve("");
       });
-      const blurHashes = await Promise.all(blurHashPromises);
+    });
+  };
 
-      const result = await axios.post("http://localhost:3005/upload", {
-        extensions,
-      });
+  const uploadFiles = async (urls: { url: string }[]) => {
+    const uploadPromises = files.map((file, index) => 
+      axios.put(urls[index].url, file.file, {
+        headers: { "Content-Type": file.file.type },
+      })
+    );
+    await Promise.all(uploadPromises);
+  };
 
-      const urls: { url: string; key: string }[] = result.data.urls;
+  const sendCompleteMessage = (
+    roomId: string,
+    tempId: string,
+    urls: { url: string; key: string }[] | undefined,
+    blurHashes: string[]
+  ) => {
+    const uploadedFiles = urls && urls.map((url, index) => ({
+      key: url.key,
+      name: files[index].file.name,
+      url: url.url.split("?")[0],
+      saveAsMedia: files[index].saveAsMedia,
+      fileSize: files[index].file.size,
+      fileBase64Blur: blurHashes[index],
+    }));
 
-      const uploadPromises = files.map((file, index) => {
-        const fileUrl = urls[index].url;
-        return axios.put(fileUrl, file.file, {
-          headers: {
-            "Content-Type": file.file.type,
-          },
-        });
-      });
+    const payload = {
+      roomId,
+      text: messageText.trim(),
+      attachments: uploadedFiles,
+      tempId,
+      originalMessageId: isMessageReply ? targetMessageId : null,
+    };
 
-      await Promise.all(uploadPromises);
+    socket.emit("sendMessage", payload);
+  };
 
-      const uploadedFiles = urls.map(
-        (url: { url: string; key: string }, index: number) => ({
-          key: url.key,
-          name: files[index].file.name,
-          url: url.url.split("?")[0],
-          saveAsMedia: files[index].saveAsMedia,
-          fileSize: files[index].file.size,
-          fileBase64Blur: blurHashes[index],
-        })
-      );
+  const resetForm = () => {
+    handleSetMessageTextEmpty();
+    handleFileEmpty();
+  };
 
-      const payload = {
-        roomId,
-        text: messageText.trim(),
-        attachments: uploadedFiles,
-        tempId,
-        originalMessageId: isMessageReply ? targetMessageId : null,
-      };
-
-      socket.emit("sendMessage", payload);
-
-      handleSetMessageTextEmpty();
-      handleFileEmpty();
-    } catch (error) {
-      console.error("Error sending message:", error);
-      alert("Failed to send message. Please try again.");
-    }
-  }
+  const handleSendError = (error: unknown) => {
+    console.error("Error sending message:", error);
+    alert("Failed to send message. Please try again.");
+  };
 
   return handleSendMessage;
 };

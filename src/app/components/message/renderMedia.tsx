@@ -279,7 +279,10 @@ export const RenderMedia = ({ attachments }: { attachments: attachment[] }) => {
           },
         }}
       >
-        {attachments.map((item, index) => renderMediaItem(item, index))}
+        {attachments.map((item, index) => {
+          if (!item.saveAsMedia) return renderMediaItem(item, index);
+          else return;
+        })}
       </StyledImageList>
       {attachments && attachments.length > 0 && (
         <PhotoViewer
